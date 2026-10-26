@@ -43,15 +43,15 @@ export default function BGPPeersDialog({
       const data = await fetchBGPPeers(asn);
       setBgpData(data);
       
-      toast.success("BGP 数据获取成功", {
-        description: `找到 ${data.allPeers.length} 个对等关系`,
+      toast.success("BGP data loaded", {
+        description: `Found ${data.allPeers.length} peer relationships`,
         duration: 1000,
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'BGP 数据获取失败';
+      const errorMessage = err instanceof Error ? err.message : 'Unable to load BGP data';
       setError(errorMessage);
       
-      toast.error("BGP 数据获取失败", {
+      toast.error("Unable to load BGP data", {
         description: errorMessage,
         duration: 4000,
       });
@@ -67,7 +67,7 @@ export default function BGPPeersDialog({
     }
   }, [isOpen, asn, fetchBGPData]);
 
-  // 当对话框关闭时重置状态
+  // 当对话框关闭时Reset状态
   useEffect(() => {
     if (!isOpen) {
       setBgpData(null);
@@ -85,10 +85,10 @@ export default function BGPPeersDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Network className="w-5 h-5 text-blue-500" />
-            <span>BGP 对等关系</span>
+            <span>BGP peers</span>
           </DialogTitle>
           <DialogDescription>
-            AS{asn} {asnName && `(${asnName})`} 的 BGP 对等连接关系图
+            AS{asn} {asnName && `(${asnName})`} BGP peer connections
           </DialogDescription>
         </DialogHeader>
 
@@ -99,10 +99,10 @@ export default function BGPPeersDialog({
               <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
               <div className="text-center">
                 <p className="text-lg font-medium text-[rgb(var(--color-text-primary))]">
-                  正在获取 BGP 数据...
+                  Loading BGP data...
                 </p>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                  请稍候，这可能需要几秒钟时间
+                  Please wait. This may take a few seconds.
                 </p>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function BGPPeersDialog({
               <AlertCircle className="w-8 h-8 text-red-500" />
               <div className="text-center space-y-2">
                 <p className="text-lg font-medium text-[rgb(var(--color-text-primary))]">
-                  数据获取失败
+                  Unable to load data
                 </p>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] max-w-md">
                   {error}
@@ -123,7 +123,7 @@ export default function BGPPeersDialog({
                   onClick={handleRetry}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm font-medium"
                 >
-                  重试
+                  Retry
                 </button>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function BGPPeersDialog({
                 <div className="bg-[rgb(var(--color-surface))] rounded-lg p-4 border border-[rgb(var(--color-border))] transition-colors duration-300">
                   <div className="flex items-center space-x-2">
                     <Hash className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">目标 ASN</span>
+                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">Target ASN</span>
                   </div>
                   <p className="text-lg font-bold text-[rgb(var(--color-text-primary))] mt-1">
                     AS{bgpData.centerAsn}
@@ -148,8 +148,8 @@ export default function BGPPeersDialog({
                   <div className="flex items-center space-x-2">
                     <Layers className="w-4 h-4 text-emerald-500" />
                     <span className="text-sm text-[rgb(var(--color-text-secondary))]">
-                      {protocolType === 'ipv4' ? 'IPv4 对等' : 
-                       protocolType === 'ipv6' ? 'IPv6 对等' : '总对等数'}
+                      {protocolType === 'ipv4' ? 'IPv4 peers' : 
+                       protocolType === 'ipv6' ? 'IPv6 peers' : 'Total peers'}
                     </span>
                   </div>
                   <p className="text-lg font-bold text-[rgb(var(--color-text-primary))] mt-1">
@@ -162,7 +162,7 @@ export default function BGPPeersDialog({
                 <div className="bg-[rgb(var(--color-surface))] rounded-lg p-4 border border-[rgb(var(--color-border))] transition-colors duration-300">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">IPv4 对等</span>
+                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">IPv4 peers</span>
                   </div>
                   <p className="text-lg font-bold text-[rgb(var(--color-text-primary))] mt-1">
                     {bgpData.ipv4Peers.length}
@@ -172,7 +172,7 @@ export default function BGPPeersDialog({
                 <div className="bg-[rgb(var(--color-surface))] rounded-lg p-4 border border-[rgb(var(--color-border))] transition-colors duration-300">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">IPv6 对等</span>
+                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">IPv6 peers</span>
                   </div>
                   <p className="text-lg font-bold text-[rgb(var(--color-text-primary))] mt-1">
                     {bgpData.ipv6Peers.length}
@@ -186,13 +186,13 @@ export default function BGPPeersDialog({
                   <div className="flex items-center space-x-2">
                     <Globe className="w-5 h-5 text-green-500" />
                     <h3 className="text-lg font-semibold text-[rgb(var(--color-text-primary))]">
-                      网络拓扑图
+                      Network topology
                     </h3>
                   </div>
                   
-                  {/* 协议切换控件 */}
+                  {/* Protocol切换控件 */}
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">协议类型:</span>
+                    <span className="text-sm text-[rgb(var(--color-text-secondary))]">Protocol:</span>
                     <div className="flex bg-[rgb(var(--color-surface-hover))] rounded-lg p-1 border border-[rgb(var(--color-border))]">
                       <button
                         onClick={() => setProtocolType('ipv4')}
@@ -222,7 +222,7 @@ export default function BGPPeersDialog({
                             : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
                         }`}
                       >
-                        全部
+                        All
                       </button>
                     </div>
                   </div>
@@ -237,24 +237,24 @@ export default function BGPPeersDialog({
                 </div>
                 
                 <div className="text-xs text-[rgb(var(--color-text-muted))] space-y-1">
-                  <p>• 拖拽节点可以调整布局，滚轮可以缩放图表</p>
-                  <p>• 鼠标悬停在节点上查看详细信息</p>
-                  <p>• 不同颜色的连线表示不同类型的对等关系</p>
-                  <p>• 蓝色实线表示IPv4连接，紫色虚线表示IPv6连接</p>
+                  <p>• Drag nodes to adjust the layout; scroll to zoom</p>
+                  <p>• Hover over a node to see details</p>
+                  <p>• Line colors indicate the peer connection type</p>
+                  <p>• Solid blue lines indicate IPv4; dashed purple lines indicate IPv6</p>
                 </div>
               </div>
 
-              {/* 对等节点列表 */}
+              {/* Peer list */}
               {bgpData.allPeers.length > 0 && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-[rgb(var(--color-text-primary))]">
-                      对等节点列表
+                      Peer list
                     </h3>
                     <span className="text-sm text-[rgb(var(--color-text-secondary))]">
-                      {protocolType === 'ipv4' ? `IPv4: ${bgpData.ipv4Peers.length} 个节点` :
-                       protocolType === 'ipv6' ? `IPv6: ${bgpData.ipv6Peers.length} 个节点` :
-                       `共 ${bgpData.allPeers.length} 个节点`}
+                      {protocolType === 'ipv4' ? `IPv4: ${bgpData.ipv4Peers.length} nodes` :
+                       protocolType === 'ipv6' ? `IPv6: ${bgpData.ipv6Peers.length} nodes` :
+                       `Total: ${bgpData.allPeers.length} nodes`}
                     </span>
                   </div>
                   
@@ -312,9 +312,9 @@ export default function BGPPeersDialog({
                       bgpData.allPeers.length) > 20 && (
                       <div className="text-center py-2">
                         <span className="text-sm text-[rgb(var(--color-text-muted))]">
-                          还有 {(protocolType === 'ipv4' ? bgpData.ipv4Peers.length :
+                          Remaining: {(protocolType === 'ipv4' ? bgpData.ipv4Peers.length :
                                 protocolType === 'ipv6' ? bgpData.ipv6Peers.length :
-                                bgpData.allPeers.length) - 20} 个节点未显示...
+                                bgpData.allPeers.length) - 20} more nodes not shown...
                         </span>
                       </div>
                     )}

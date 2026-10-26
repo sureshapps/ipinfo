@@ -37,21 +37,21 @@ export interface IPInfo {
   timezone?: string;
   postal?: string;
   accuracy: "high" | "medium" | "low";
-  source: "MaxMind" | "GeoCN" | "MeiTuan";
+  source: "MaxMind" | "GeoCN" | "MeiTuan" | "IPWhois" | "Geoapify";
   ipVersion: "IPv4" | "IPv6";
-  // 代理检测信息
+  // Connection check信息
   proxyDetection?: ProxyDetectionResult;
   // 美团特有字段
   meituan?: {
-    areaName?: string; // 区域名称，如"王府井/东单"
-    detail?: string; // 详细地址，如"正义路甲4号-B座"
+    areaName?: string; // 区域Name，如"王府井/东单"
+    detail?: string; // Street address，如"正义路甲4号-B座"
     cityPinyin?: string; // 城市拼音
     openCityName?: string; // 开放城市名
     isForeign?: boolean; // 是否为境外
     dpCityId?: number; // 美团城市ID
     area?: number; // 区域编号
     parentArea?: number; // 父区域编号
-    fromwhere?: string; // 数据来源标识
+    fromwhere?: string; // Data source标识
     adcode?: string; // 行政区划代码
   };
 }
@@ -112,7 +112,8 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
       });
 
       if (!response.ok) {
-        throw new Error(`查询失败: ${response.statusText}`);
+        const failure = await response.json().catch(() => ({}));
+        throw new Error(failure.error || `Lookup failed: ${response.statusText}`);
       }
 
       const result: IPInfo = await response.json();
@@ -121,12 +122,12 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
         ipData: result,
         isLoading: false,
         error: null, // 确保清除错误状态
-        isAutoDetected: !ip,
+        isAutoDetected: !queryIP,
         currentQuery: result.ip,
       });
 
       // 显示成功提示
-      toast.success(`查询成功`, {
+      toast.success(`Lookup complete`, {
         description: `IP: ${result.ip} - ${result.country}${
           result.city ? ` · ${result.city}` : ""
         }`,
@@ -136,7 +137,7 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
       // 添加到历史记录
       get().addToHistory(result);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "查询失败";
+      const errorMessage = error instanceof Error ? error.message : "Lookup failed";
 
       set({
         error: errorMessage,
@@ -145,19 +146,19 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
       });
 
       // 只显示toast错误提示，不在页面显示错误卡片
-      toast.error("查询失败", {
+      toast.error("Lookup failed", {
         description: errorMessage,
         duration: 2000,
       });
     }
   },
 
-  // 执行代理检测
+  // 执行Connection check
   executeProxyDetection: async () => {
     set({ isProxyDetecting: true });
 
     try {
-      // 1. 先获取headers中的IP地址
+      // 1. 先获取headers中的IP address
       let headerIP: string | null = null;
       try {
         const headerResponse = await fetch("/api/query", {
@@ -172,12 +173,12 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
         console.warn("获取headers IP失败:", error);
       }
 
-      // 2. 执行客户端代理检测（直接调用外部API）
+      // 2. 执行客户端Connection check（直接调用外部API）
       const proxyResult: ProxyDetectionResult = await detectProxyClient(
         headerIP
       );
 
-      // 更新当前IP数据，添加代理检测信息
+      // 更新当前IP数据，添加Connection check信息
       const currentData = get().ipData;
       if (currentData) {
         const updatedData: IPInfo = {
@@ -190,29 +191,29 @@ export const useIPQueryStore = create<IPQueryState>((set, get) => ({
           isProxyDetecting: false,
         });
 
-        // 显示检测结果提示
+        // 显示Result提示
         const proxyTypeText = {
-          direct: "直连",
-          domestic: "国内代理",
-          foreign: "国外代理",
-          mixed: "混合代理",
-          unknown: "未知",
+          direct: "Direct",
+          domestic: "Domestic proxy",
+          foreign: "Foreign proxy",
+          mixed: "Mixed proxy",
+          unknown: "Unknown",
         }[proxyResult.proxyType];
 
-        toast.success("代理检测完成", {
-          description: `检测结果: ${proxyTypeText} (置信度: ${Math.round(
+        toast.success("Connection check complete", {
+          description: `Result: ${proxyTypeText} (Confidence: ${Math.round(
             proxyResult.confidence * 100
           )}%)`,
           duration: 4000,
         });
       }
     } catch (error) {
-      console.error("代理检测失败:", error);
+      console.error("Connection check failed:", error);
       set({ isProxyDetecting: false });
 
-      toast.error("代理检测失败", {
+      toast.error("Connection check failed", {
         description:
-          error instanceof Error ? error.message : "无法完成代理检测",
+          error instanceof Error ? error.message : "Unable to check the connection",
         duration: 4000,
       });
     }

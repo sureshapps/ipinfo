@@ -35,7 +35,7 @@ export const TextGenerateEffect = ({
     }, 15);
 
     return () => clearTimeout(timer);
-  }, [scope, animate, duration, filter, safeWords]); // 添加safeWords依赖，确保当IP地址变化时重新触发动画
+  }, [scope, animate, duration, filter, safeWords]); // 添加safeWords依赖，确保当IP address变化时重新触发动画
 
   const renderWords = () => {
     return (

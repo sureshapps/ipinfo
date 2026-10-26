@@ -41,7 +41,7 @@ const createCustomIcon = (isDark: boolean) => {
   });
 };
 
-// 地图视图更新组件
+// 地图 view更新组件
 interface MapViewUpdaterProps {
   center: LatLngTuple;
   zoom: number;
@@ -118,7 +118,7 @@ export default function IPLocationMap({
 
   const isValidCoordinates = coordinateValidation.isValid;
 
-  // 检查是否为私有IP
+  // 检查是否为PrivateIP
   const isPrivateIP = useMemo(() => {
     const ip = ipData.ip;
     const privateIPv4Ranges = [
@@ -171,7 +171,7 @@ export default function IPLocationMap({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("复制坐标失败:", err);
+      console.error("Could not copy coordinates:", err);
     }
   }, [ipData.location]);
 
@@ -185,20 +185,20 @@ export default function IPLocationMap({
     return parts.join(" · ");
   }, [ipData]);
 
-  // 获取精度文本
+  // 获取Accuracy文本
   const getAccuracyText = useCallback(() => {
     const { accuracy_radius } = ipData.location;
     if (accuracy_radius) {
-      return `精度半径: ~${accuracy_radius}km`;
+      return `Accuracy radius: ~${accuracy_radius}km`;
     }
     return ipData.accuracy === "high"
-      ? "高精度"
+      ? "High"
       : ipData.accuracy === "medium"
-      ? "中等精度"
-      : "低精度";
+      ? "Medium"
+      : "Low";
   }, [ipData.location, ipData.accuracy]);
 
-  // 无效坐标或私有IP的占位符组件
+  // 无效坐标或PrivateIP的占位符组件
   if (!isValidCoordinates || isPrivateIP) {
     return (
       <motion.div
@@ -215,7 +215,7 @@ export default function IPLocationMap({
             </div>
             <div>
               <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                地理位置
+                Location
               </h3>
               <p className="text-sm text-[rgb(var(--color-text-secondary))]">
                 {formatLocation()}
@@ -256,11 +256,11 @@ export default function IPLocationMap({
               )}
             </motion.div>
             <p className="text-[rgb(var(--color-text-secondary))] font-medium mb-2">
-              {isPrivateIP ? "私有网络地址" : "位置信息不可用"}
+              {isPrivateIP ? "Private network address" : "Location unavailable"}
             </p>
             <div className="inline-flex items-center space-x-2 bg-[rgb(var(--color-surface))]/80 px-3 py-1.5 rounded-full text-sm text-[rgb(var(--color-text-muted))] transition-colors duration-300">
               <MapPin className="w-4 h-4" />
-              <span>{isPrivateIP ? "本地网络" : "无有效坐标"}</span>
+              <span>{isPrivateIP ? "Local network" : "No valid coordinates"}</span>
             </div>
           </div>
         </div>
@@ -269,10 +269,10 @@ export default function IPLocationMap({
         <div className="px-6 py-3 bg-[rgb(var(--color-surface))] transition-colors duration-300">
           <div className="flex items-center justify-between text-sm">
             <span className="text-[rgb(var(--color-text-muted))]">
-              数据来源: {ipData.source}
+              Data source: {ipData.source}
             </span>
             <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 transition-colors duration-300">
-              {isPrivateIP ? "本地网络" : "未知位置"}
+              {isPrivateIP ? "Local network" : "Unknown location"}
             </span>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function IPLocationMap({
             </div>
             <div>
               <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                地理位置
+                Location
               </h3>
               <p className="text-sm text-[rgb(var(--color-text-secondary))]">
                 {formatLocation()}
@@ -329,7 +329,7 @@ export default function IPLocationMap({
           zoom={zoomLevel}
           style={{ height: "100%", width: "100%" }}
           zoomControl={false}
-          attributionControl={false}
+          attributionControl={true}
           className="z-0"
         >
           <TileLayer
@@ -338,7 +338,7 @@ export default function IPLocationMap({
             maxZoom={tileProvider.maxZoom}
           />
 
-          {/* 地图视图更新组件 */}
+          {/* 地图 view更新组件 */}
           <MapViewUpdater center={mapCenter} zoom={zoomLevel} />
 
           <Marker position={mapCenter} icon={createCustomIcon(isDark)}>
@@ -348,8 +348,8 @@ export default function IPLocationMap({
                   {formatLocation()}
                 </div>
                 <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                  <div>纬度: {ipData.location.latitude.toFixed(6)}°</div>
-                  <div>经度: {ipData.location.longitude.toFixed(6)}°</div>
+                  <div>Latitude: {ipData.location.latitude.toFixed(6)}°</div>
+                  <div>Longitude: {ipData.location.longitude.toFixed(6)}°</div>
                   <div>{getAccuracyText()}</div>
                 </div>
               </div>
@@ -384,7 +384,7 @@ export default function IPLocationMap({
       <div className="px-4 md:px-6 py-3 bg-[rgb(var(--color-surface))] transition-colors duration-300">
         <div className="flex items-center justify-between text-sm">
           <span className="text-[rgb(var(--color-text-muted))]">
-            数据来源: {ipData.source}
+            Data source: {ipData.source}
           </span>
           <span
             className={`

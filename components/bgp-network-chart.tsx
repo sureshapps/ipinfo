@@ -67,11 +67,11 @@ export default function BGPNetworkChart({
     return flagMap[countryCode] || '🌐';
   };
 
-// ASN层级分类常量 (基于公开的互联网基础设施数据，更新时间：2024年)
+// ASNLevel分类常量 (基于公开的互联网基础设施数据，更新时间：2024年)
 const TIER1_ASNS = useMemo(() => [174, 209, 286, 701, 1239, 1299, 2914, 3257, 3320, 3356, 3491, 5511, 6453, 6461, 6830, 7018, 12956], []);
 const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409, 215871], []);
 
-  // 获取ASN层级
+  // 获取ASNLevel
   const getASNTier = useCallback((asn: number) => {
     if (TIER1_ASNS.includes(asn)) return { tier: 'tier1' as const, label: 'Tier 1 ISP', color: '#3b82f6' };
     if (TIER2_ASNS.includes(asn)) return { tier: 'tier2' as const, label: 'Tier 2 ISP', color: '#f97316' };
@@ -85,14 +85,14 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
     const nodes: NetworkNode[] = [];
     const links: NetworkLink[] = [];
 
-    // 根据协议类型筛选对等节点
+    // 根据Protocol筛选对等节点
     let selectedPeers: BGPPeer[] = [];
     if (protocolType === 'ipv4') {
       selectedPeers = data.ipv4Peers;
     } else if (protocolType === 'ipv6') {
       selectedPeers = data.ipv6Peers;
     } else {
-      // 合并IPv4和IPv6数据，但保持协议信息
+      // 合并IPv4和IPv6数据，但保持Protocol信息
       const allPeers = new Map<number, BGPPeer>();
       data.ipv4Peers.forEach(peer => allPeers.set(peer.asn, peer));
       data.ipv6Peers.forEach(peer => allPeers.set(peer.asn, peer));
@@ -104,8 +104,8 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       id: `as${data.centerAsn}`,
       asn: data.centerAsn,
       name: data.centerName || 'Target ASN',
-      description: '目标 ASN',
-      countryCode: 'CN',
+      description: 'Target ASN',
+      countryCode: '',
       isCenter: true,
       tier: 'origin',
       layer: 0,
@@ -118,17 +118,17 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
     };
     nodes.push(centerNode);
 
-    // 按层级分组
+    // 按Level分组
     const tier1Peers = selectedPeers.filter(p => getASNTier(p.asn).tier === 'tier1');
     const tier2Peers = selectedPeers.filter(p => getASNTier(p.asn).tier === 'tier2');
 
 
-    // 添加层级节点
+    // 添加Level节点
     const addNodesForTier = (tierPeers: BGPPeer[], layer: number, startX: number) => {
       tierPeers.forEach((peer, index) => {
         const tierInfo = getASNTier(peer.asn);
         
-        // 确定节点的协议类型
+        // 确定节点的Protocol
         const hasIPv4 = data.ipv4Peers.some(p => p.asn === peer.asn);
         const hasIPv6 = data.ipv6Peers.some(p => p.asn === peer.asn);
         const nodeProtocolType = hasIPv4 && hasIPv6 ? 'both' : hasIPv6 ? 'ipv6' : 'ipv4';
@@ -153,7 +153,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
 
         // 创建到中心节点的连接
         if (protocolType === 'both') {
-          // 在混合模式下，为IPv4和IPv6分别创建连接
+          // 在混合 mode下，为IPv4和IPv6分别创建连接
           if (hasIPv4) {
             links.push({
               source: centerNode.id,
@@ -173,7 +173,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
             });
           }
         } else {
-          // 在单一协议模式下，只创建一种连接
+          // 在单一Protocol mode下，只创建一种连接
           links.push({
             source: centerNode.id,
             target: node.id,
@@ -317,7 +317,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .attr("font-weight", "bold")
       .text(d => `AS${d.asn}`);
 
-    // 名称文本
+    // Name文本
     nodeGroups.append("text")
       .attr("x", d => d.isCenter ? 60 : 50)
       .attr("y", 32)
@@ -326,7 +326,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .attr("font-size", "10px")
       .text(d => d.name.length > 12 ? d.name.substring(0, 12) + '...' : d.name);
 
-    // 国家标识 - 直接使用SVG text显示emoji国旗
+    // Country标识 - 直接使用SVG text显示emoji国旗
     nodeGroups.filter((d: NetworkNode) => !d.isCenter && Boolean(d.countryCode) && d.countryCode !== 'XX')
       .append("text")
       .attr("x", 85)
@@ -336,7 +336,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .style("filter", "drop-shadow(1px 1px 1px rgba(0,0,0,0.5))")
       .text(d => {
         const flag = getCountryFlag(d.countryCode);
-        // 如果emoji国旗不可用，显示国家代码
+        // 如果emoji国旗不可用，显示Country code
         return flag !== '🌐' ? flag : d.countryCode;
       });
 
@@ -363,9 +363,9 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
             `<div><strong>AS${d.asn}</strong></div>` +
             `<div>${d.name}</div>` +
             `<div>${d.description}</div>` +
-            (d.countryCode ? `<div>国家: ${d.countryCode}</div>` : '') +
-            `<div>层级: ${d.label || 'Origin'}</div>` +
-            `<div>协议: ${d.protocolType === 'both' ? 'IPv4/IPv6' : d.protocolType}</div>`
+            (d.countryCode ? `<div>Country: ${d.countryCode}</div>` : '') +
+            `<div>Level: ${d.label || 'Origin'}</div>` +
+            `<div>Protocol: ${d.protocolType === 'both' ? 'IPv4/IPv6' : d.protocolType}</div>`
           );
       })
       .on('mousemove', (event) => {
@@ -383,7 +383,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .attr("y", height - 20)
       .attr("fill", "#6b7280")
       .attr("font-size", "12px")
-      .text(new Date().toLocaleString('zh-CN', {
+      .text(new Date().toLocaleString('en-US', {
         year: '2-digit',
         month: '2-digit', 
         day: '2-digit',
@@ -455,8 +455,8 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       };
       
       img.onerror = () => {
-        toast.error("图片生成失败", {
-          description: "请稍后重试",
+        toast.error("Image generation failed", {
+          description: "Please try again later",
           duration: 3000,
         });
       };
@@ -466,8 +466,8 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       img.src = 'data:image/svg+xml;base64,' + encodedSvg;
       
     } catch {
-      toast.error("导出失败", {
-        description: "请稍后重试",
+      toast.error("Export failed", {
+        description: "Please try again later",
         duration: 3000,
       });
     }
@@ -523,12 +523,12 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
         <div className="absolute bottom-4 left-4 bg-[rgb(var(--color-surface))]/95 backdrop-blur-sm p-3 rounded-lg shadow-sm border border-[rgb(var(--color-border))] max-w-xs">
           <h4 className="font-medium text-sm mb-2 flex items-center gap-1 text-[rgb(var(--color-text-primary))]">
             <Globe className="h-4 w-4" />
-            节点类型
+            Node types
           </h4>
           <div className="space-y-1 text-xs">
             <div className="flex items-center gap-2">
               <div className="w-4 h-3 rounded bg-green-500"></div>
-              <span className="text-[rgb(var(--color-text-secondary))]">Origins (源AS)</span>
+              <span className="text-[rgb(var(--color-text-secondary))]">Origins (Origin AS)</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-3 rounded bg-blue-500"></div>
@@ -540,19 +540,19 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
             </div>
           </div>
           
-          {/* 协议类型图例 */}
+          {/* Protocol图例 */}
           {protocolType === 'both' && (
             <>
               <div className="mt-3 pt-2 border-t border-[rgb(var(--color-border))]">
-                <h5 className="font-medium text-xs mb-2 text-[rgb(var(--color-text-primary))]">连接类型</h5>
+                <h5 className="font-medium text-xs mb-2 text-[rgb(var(--color-text-primary))]">Connection types</h5>
                 <div className="space-y-1 text-xs">
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-1 bg-blue-500"></div>
-                    <span className="text-[rgb(var(--color-text-secondary))]">IPv4 连接</span>
+                    <span className="text-[rgb(var(--color-text-secondary))]">IPv4 connection</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-1 bg-purple-500" style={{ borderTop: '2px dashed #8b5cf6' }}></div>
-                    <span className="text-[rgb(var(--color-text-secondary))]">IPv6 连接</span>
+                    <span className="text-[rgb(var(--color-text-secondary))]">IPv6 connection</span>
                   </div>
                 </div>
               </div>
@@ -560,18 +560,18 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
           )}
           
           <div className="mt-2 pt-2 border-t text-xs text-[rgb(var(--color-text-muted))]">
-            点击节点查看详细信息<br/>
-            鼠标滚轮缩放，拖拽平移
+            Click a node for details<br/>
+            Scroll to zoom and drag to pan
           </div>
         </div>
       </div>
 
-      {/* 选中节点信息面板 */}
+      {/* Selected node信息面板 */}
       {selectedNode && (
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-semibold text-blue-900">
-              选中节点: AS{selectedNode.asn} {selectedNode.flag}
+              Selected node: AS{selectedNode.asn} {selectedNode.flag}
             </h3>
             <button
               onClick={() => setSelectedNode(null)}
@@ -581,9 +581,9 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
             </button>
           </div>
           <div className="grid md:grid-cols-2 gap-2 text-sm">
-            <div><strong>名称:</strong> {selectedNode.name}</div>
-            <div><strong>描述:</strong> {selectedNode.description}</div>
-            <div><strong>国家:</strong> 
+            <div><strong>Name:</strong> {selectedNode.name}</div>
+            <div><strong>Description:</strong> {selectedNode.description}</div>
+            <div><strong>Country:</strong> 
               {selectedNode.countryCode && selectedNode.countryCode !== 'XX' ? (
                 <ReactCountryFlag 
                   countryCode={selectedNode.countryCode} 
@@ -592,8 +592,8 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
                 />
               ) : '🌐'} {selectedNode.countryCode}
             </div>
-            <div><strong>层级:</strong> {selectedNode.label || 'Origin'}</div>
-            <div><strong>协议:</strong> {selectedNode.protocolType === 'both' ? 'IPv4/IPv6' : selectedNode.protocolType}</div>
+            <div><strong>Level:</strong> {selectedNode.label || 'Origin'}</div>
+            <div><strong>Protocol:</strong> {selectedNode.protocolType === 'both' ? 'IPv4/IPv6' : selectedNode.protocolType}</div>
           </div>
         </div>
       )}
@@ -608,7 +608,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
           <div className="text-2xl font-bold text-[rgb(var(--color-text-primary))] mt-1">
             {tier1Count}
           </div>
-          <p className="text-xs text-[rgb(var(--color-text-muted))]">大型国际运营商</p>
+          <p className="text-xs text-[rgb(var(--color-text-muted))]">Large international providers</p>
         </div>
         
         <div className="bg-[rgb(var(--color-surface))] rounded-lg p-4 border border-[rgb(var(--color-border))] transition-colors duration-300">
@@ -619,7 +619,7 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
           <div className="text-2xl font-bold text-[rgb(var(--color-text-primary))] mt-1">
             {tier2Count}
           </div>
-          <p className="text-xs text-[rgb(var(--color-text-muted))]">区域性大型ISP</p>
+          <p className="text-xs text-[rgb(var(--color-text-muted))]">Large regional ISPs</p>
         </div>
         
                  {/* 移除区域ISPs统计卡片 */}
@@ -627,14 +627,14 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
         <div className="bg-[rgb(var(--color-surface))] rounded-lg p-4 border border-[rgb(var(--color-border))] transition-colors duration-300">
           <div className="flex items-center space-x-2">
             <Globe className="h-4 w-4 text-green-500" />
-            <span className="text-sm text-[rgb(var(--color-text-secondary))]">覆盖地区</span>
+            <span className="text-sm text-[rgb(var(--color-text-secondary))]">Coverage</span>
           </div>
           <div className="flex flex-wrap gap-1 mt-1">
             {Array.from(new Set(nodes.map(n => n.flag))).slice(0, 6).map((flag, i) => (
               <span key={i} className="text-lg">{flag}</span>
             ))}
           </div>
-          <p className="text-xs text-[rgb(var(--color-text-muted))]">全球多地区覆盖</p>
+          <p className="text-xs text-[rgb(var(--color-text-muted))]">Multiple regions worldwide</p>
         </div>
       </div>
     </div>

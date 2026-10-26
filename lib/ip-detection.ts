@@ -218,9 +218,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "private_rfc1918",
-      message: "这是一个私有IP地址（RFC1918）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "10.0.0.0/8 网段是为私有网络保留的地址，无法查询其公网地理位置信息。这类地址通常用于企业内网、家庭网络等私有环境。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -228,9 +228,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "private_rfc1918",
-      message: "这是一个私有IP地址（RFC1918）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "172.16.0.0/12 网段是为私有网络保留的地址，无法查询其公网地理位置信息。这类地址通常用于企业内网等私有环境。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -238,9 +238,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "private_rfc1918",
-      message: "这是一个私有IP地址（RFC1918）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "192.168.0.0/16 网段是为私有网络保留的地址，无法查询其公网地理位置信息。这类地址最常用于家庭路由器和小型办公网络。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -249,9 +249,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "loopback",
-      message: "这是一个回环地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "127.0.0.0/8 网段是回环地址，指向本机自身，无法查询地理位置信息。最常见的是 127.0.0.1（localhost）。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -260,9 +260,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "link_local",
-      message: "这是一个链路本地地址（APIPA）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "169.254.0.0/16 网段是自动私有IP地址（APIPA），当设备无法获取DHCP地址时自动分配，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -271,9 +271,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "shared_cgnat",
-      message: "这是一个共享地址空间（CGNAT）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "100.64.0.0/10 网段是运营商级NAT（CGNAT）使用的共享地址空间，无法查询准确的地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -282,9 +282,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "multicast",
-      message: "这是一个多播地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "224.0.0.0/4 网段是多播地址，用于一对多的网络通信，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -293,9 +293,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "reserved",
-      message: "这是一个保留地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "240.0.0.0/4 网段是为未来使用保留的地址，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -304,9 +304,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "broadcast",
-      message: "这是广播地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "255.255.255.255 是有限广播地址，用于向本地网络中的所有设备发送数据，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -315,9 +315,9 @@ function checkPrivateIPv4(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "unspecified",
-      message: "这是未指定地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        '0.0.0.0 是未指定地址，通常表示"本机上的任意地址"，无法查询地理位置信息。',
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -338,9 +338,9 @@ function checkPrivateIPv6(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "loopback",
-      message: "这是IPv6回环地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "::1 是IPv6的回环地址，等同于IPv4的127.0.0.1，指向本机自身，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -349,9 +349,9 @@ function checkPrivateIPv6(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "unspecified",
-      message: "这是IPv6未指定地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        ":: 是IPv6的未指定地址，等同于IPv4的0.0.0.0，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -360,9 +360,9 @@ function checkPrivateIPv6(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "link_local",
-      message: "这是IPv6链路本地地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "fe80::/10 网段是IPv6链路本地地址，仅在本地网络链路内有效，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -371,9 +371,9 @@ function checkPrivateIPv6(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "unique_local",
-      message: "这是IPv6唯一本地地址（ULA）",
+      message: "This address is reserved for a non-public network.",
       description:
-        "fc00::/7 网段是IPv6唯一本地地址，类似于IPv4的私有地址，用于私有网络，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -382,9 +382,9 @@ function checkPrivateIPv6(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "multicast",
-      message: "这是IPv6多播地址",
+      message: "This address is reserved for a non-public network.",
       description:
-        "ff00::/8 网段是IPv6多播地址，用于一对多的网络通信，无法查询地理位置信息。",
+        "Public geolocation is unavailable for private, loopback, multicast, and reserved addresses.",
     };
   }
 
@@ -404,7 +404,7 @@ export function checkPrivateIP(ip: string): PrivateIPCheckResult {
     return {
       isPrivate: true,
       type: "invalid",
-      message: "IP地址格式无效",
+      message: "This address is reserved for a non-public network.",
       description: "请输入有效的IPv4或IPv6地址格式。",
     };
   }

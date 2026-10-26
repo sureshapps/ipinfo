@@ -51,8 +51,8 @@ class MapErrorBoundary extends Component<Props, State> {
                 <AlertTriangle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">地图加载失败</h3>
-                <p className="text-sm text-[rgb(var(--color-text-secondary))]">地图组件遇到了问题</p>
+                <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">Map failed to load</h3>
+                <p className="text-sm text-[rgb(var(--color-text-secondary))]">The map encountered a problem</p>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@ class MapErrorBoundary extends Component<Props, State> {
               </motion.div>
               
               <p className="text-[rgb(var(--color-text-secondary))] font-medium mb-4">
-                无法加载地图组件
+                Unable to load the map
               </p>
               
               <button
@@ -82,14 +82,14 @@ class MapErrorBoundary extends Component<Props, State> {
                 className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>重试加载</span>
+                <span>Reload map</span>
               </button>
 
               {/* 错误详情（开发环境显示） */}
               {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-4 text-left">
                   <summary className="text-sm text-[rgb(var(--color-text-muted))] cursor-pointer">
-                    查看错误详情
+                    View error details
                   </summary>
                   <pre className="mt-2 p-3 bg-gray-100 dark:bg-gray-800 rounded text-xs text-[rgb(var(--color-text-secondary))] overflow-auto max-h-32">
                     {this.state.error.message}
@@ -109,7 +109,7 @@ class MapErrorBoundary extends Component<Props, State> {
           <div className="px-6 py-3 bg-[rgb(var(--color-surface))] transition-colors duration-300">
             <div className="flex items-center justify-center text-sm text-[rgb(var(--color-text-muted))]">
               <MapPin className="w-4 h-4 mr-2" />
-              <span>地图服务暂时不可用，您仍可查看其他IP信息</span>
+              <span>Map service is unavailable. Other IP details are still available.</span>
             </div>
           </div>
         </motion.div>

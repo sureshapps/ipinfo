@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* 启用暗色模式类名策略 */
+/* 启用dark mode类名策略 */
 @variant dark (.dark &);
 
 /* CSS变量定义 */
@@ -29,7 +29,7 @@
   --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
   --ease-custom: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* 浅色主题语义化颜色 */
+  /* light主题语义化颜色 */
   --color-background: 255 255 255; /* white */
   --color-background-secondary: 248 250 252; /* slate-50 */
   --color-surface: 255 255 255; /* white */
@@ -89,9 +89,9 @@
     0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
-/* 暗色主题 */
+/* dark主题 */
 .dark {
-  /* 暗色主题语义化颜色 */
+  /* dark主题语义化颜色 */
   --color-background: 2 6 23; /* slate-950 */
   --color-background-secondary: 15 23 42; /* slate-900 */
   --color-surface: 15 23 42; /* slate-900 */
@@ -127,7 +127,7 @@
     rgb(30 41 59 / 0.9)
   );
 
-  /* 暗色模式阴影 */
+  /* dark mode阴影 */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4),
@@ -136,7 +136,7 @@
     0 8px 10px -6px rgb(0 0 0 / 0.5);
 }
 
-/* 基础样式重置 */
+/* 基础样式Reset */
 * {
   box-sizing: border-box;
 }
@@ -303,7 +303,7 @@ body {
   }
 }
 
-/* 移动端触摸优化 */
+/* Mobile触摸优化 */
 @media (max-width: 768px) {
   /* 确保按钮有足够的触摸区域 */
   button, [role="button"] {
@@ -316,7 +316,7 @@ body {
     padding: 1rem;
   }
   
-  /* 移动端文字换行优化 */
+  /* Mobile文字换行优化 */
   .mobile-text-wrap {
     word-break: break-all;
     overflow-wrap: break-word;
@@ -392,7 +392,7 @@ html.dark {
   color-scheme: dark;
 }
 
-/* 深色模式特定样式优化 */
+/* 深色 mode特定样式优化 */
 @media (prefers-color-scheme: dark) {
   /* 为系统主题用户提供更好的默认体验 */
   :root:not(.light) {
@@ -474,7 +474,7 @@ html.dark {
   @apply bg-white dark:bg-gray-800;
 }
 
-/* 地图容器适配暗色主题 */
+/* 地图容器适配dark主题 */
 .dark .leaflet-container {
   filter: brightness(0.9) contrast(1.1);
 }

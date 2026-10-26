@@ -97,7 +97,7 @@ export default function ThemeToggle() {
         transition-all duration-200
         group overflow-hidden
       "
-      title={`切换到${resolvedTheme === 'light' ? '暗色' : '浅色'}模式`}
+      title={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
       <AnimatePresence mode="wait" initial={false}>
         {resolvedTheme === 'dark' ? (
@@ -141,7 +141,7 @@ export default function ThemeToggle() {
   );
 }
 
-// 紧凑版主题切换器（用于移动端或空间受限的地方）
+// 紧凑版主题切换器（用于Mobile或空间受限的地方）
 export function CompactThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -171,7 +171,7 @@ export function CompactThemeToggle() {
         transition-all duration-200
         group
       "
-      title={`切换到${resolvedTheme === 'light' ? '暗色' : '浅色'}模式`}
+      title={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
       <AnimatePresence mode="wait" initial={false}>
         {resolvedTheme === 'dark' ? (

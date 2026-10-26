@@ -45,7 +45,7 @@ export default function DatabaseInitializer() {
             console.warn("数据库初始化失败:", initData.error);
           }
         } else {
-          console.warn("数据库初始化请求失败");
+          console.warn("数据库初始化Request failed");
         }
       } catch (error) {
         // 静默处理错误，不影响应用运行
