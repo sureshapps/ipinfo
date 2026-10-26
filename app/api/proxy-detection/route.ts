@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { detectProxy, ProxyDetectionResult } from "@/lib/ip-detection";
 
 /**
- * 代理检测API路由
+ * Connection checkAPI路由
  * GET请求：检测当前客户端的代理使用情况
  */
 export async function GET(request: NextRequest) {
   try {
-    console.log("开始代理检测...");
+    console.log("开始Connection check...");
     
-    // 执行代理检测
+    // 执行Connection check
     const result: ProxyDetectionResult = await detectProxy(request);
     
-    console.log("代理检测完成:", {
+    console.log("Connection check complete:", {
       headerIP: result.headerIP,
       domesticIP: result.domesticIP,
       foreignIP: result.foreignIP,
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("代理检测失败:", error);
+    console.error("Connection check failed:", error);
     
     // 返回错误信息，但保持API结构一致
     const errorResult: ProxyDetectionResult = {
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       isUsingProxy: false,
       proxyType: 'unknown',
       confidence: 0,
-      errors: [error instanceof Error ? error.message : "代理检测失败"],
+      errors: [error instanceof Error ? error.message : "Connection check failed"],
       detectionTime: 0,
     };
 
@@ -58,12 +58,12 @@ export async function POST(request: NextRequest) {
 
     if (!enableProxyDetection) {
       return NextResponse.json(
-        { error: "代理检测未启用" },
+        { error: "Connection check is disabled" },
         { status: 400 }
       );
     }
 
-    // 执行代理检测
+    // 执行Connection check
     const result: ProxyDetectionResult = await detectProxy(request);
 
     return NextResponse.json(result, {
@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("代理检测POST请求失败:", error);
+    console.error("Connection checkPOSTRequest failed:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "代理检测失败" },
+      { error: error instanceof Error ? error.message : "Connection check failed" },
       { status: 500 }
     );
   }

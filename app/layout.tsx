@@ -3,7 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { Toaster } from "@/components/ui/sonner";
-import DatabaseInitializer from "@/components/database-initializer";
+
 
 // 字体配置
 const inter = Inter({
@@ -20,23 +20,23 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "IP-Search",
-  description: "精确查询IPv4/IPv6地址的地理位置、运营商信息和网络详情",
-  keywords: "IP查询,IPv4,IPv6,地理位置,运营商,ASN,网络信息,IP定位",
+  description: "Look up IPv4 and IPv6 locations, providers, and network details",
+  keywords: "IP lookup,IPv4,IPv6,geolocation,ISP,ASN,network information",
   authors: [{ name: "dnslin" }],
   creator: "dnslin",
   publisher: "dnslin",
   robots: "index, follow",
   openGraph: {
     type: "website",
-    locale: "zh_CN",
-    title: "IP地址查询 - 精确查询IPv4/IPv6地址的地理位置、运营商信息和网络详情",
-    description: "精确查询IPv4/IPv6地址的地理位置、运营商信息和网络详情",
+    locale: "en_US",
+    title: "IP address lookup - Look up IPv4 and IPv6 locations, providers, and network details",
+    description: "Look up IPv4 and IPv6 locations, providers, and network details",
     siteName: "IP-Search",
   },
   twitter: {
     card: "summary_large_image",
-    title: "IP地址查询 - 精确查询IPv4/IPv6地址的地理位置、运营商信息和网络详情",
-    description: "精确查询IPv4/IPv6地址的地理位置、运营商信息和网络详情",
+    title: "IP address lookup - Look up IPv4 and IPv6 locations, providers, and network details",
+    description: "Look up IPv4 and IPv6 locations, providers, and network details",
   },
 };
 
@@ -52,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,7 +76,7 @@ export default function RootLayout({
           {children}
         </div>
         <Toaster />
-        <DatabaseInitializer />
+        
       </body>
     </html>
   );

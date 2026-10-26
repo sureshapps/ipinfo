@@ -45,7 +45,7 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
     return screenSize === 'mobile' ? 'h-48' : 'h-64';
   }, [isExpanded, isMobile, screenSize]);
 
-  // 切换展开状态
+  // 切换Expand状态
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
@@ -77,7 +77,7 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
               <Monitor className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
             )}
             <span className="text-sm text-[rgb(var(--color-text-secondary))]">
-              {screenSize === 'mobile' ? '移动端' : screenSize === 'tablet' ? '平板' : '桌面端'}视图
+              {screenSize === 'mobile' ? 'Mobile' : screenSize === 'tablet' ? 'Tablet' : 'Desktop'} view
             </span>
           </div>
         </div>
@@ -85,20 +85,20 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
         <button
           onClick={toggleExpanded}
           className="flex items-center space-x-2 px-3 py-1.5 rounded-lg hover:bg-[rgb(var(--color-surface-hover))] transition-colors duration-200 group"
-          aria-label={isExpanded ? '收起地图' : '展开地图'}
+          aria-label={isExpanded ? 'Collapse map' : 'Expand map'}
         >
           {isExpanded ? (
             <>
               <Minimize2 className="w-4 h-4 text-[rgb(var(--color-text-muted))] group-hover:text-[rgb(var(--color-text-secondary))]" />
               <span className="text-sm text-[rgb(var(--color-text-muted))] group-hover:text-[rgb(var(--color-text-secondary))]">
-                收起
+                Collapse
               </span>
             </>
           ) : (
             <>
               <Maximize2 className="w-4 h-4 text-[rgb(var(--color-text-muted))] group-hover:text-[rgb(var(--color-text-secondary))]" />
               <span className="text-sm text-[rgb(var(--color-text-muted))] group-hover:text-[rgb(var(--color-text-secondary))]">
-                展开
+                Expand
               </span>
             </>
           )}
@@ -110,7 +110,7 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
         layout
         className={`${mapHeight} transition-all duration-300 ease-in-out`}
         style={{
-          // 为移动端优化触摸体验
+          // 为Mobile优化触摸体验
           touchAction: isMobile ? 'pan-x pan-y' : 'auto',
         }}
       >
@@ -120,7 +120,7 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
         />
       </motion.div>
 
-      {/* 移动端提示 */}
+      {/* Mobile提示 */}
       {isMobile && !isExpanded && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -128,12 +128,12 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
           className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-10"
         >
           <div className="bg-black/70 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm">
-            点击展开按钮查看完整地图
+            Expand to view the full map
           </div>
         </motion.div>
       )}
 
-      {/* 展开状态下的额外信息 */}
+      {/* Expand状态下的额外信息 */}
       {isExpanded && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -143,16 +143,16 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
             <div>
-              <span className="text-[rgb(var(--color-text-secondary))]">坐标精度:</span>
+              <span className="text-[rgb(var(--color-text-secondary))]">Location accuracy:</span>
               <span className="ml-2 font-medium text-[rgb(var(--color-text-primary))]">
-                {ipData.accuracy === 'high' ? '高精度' : 
-                 ipData.accuracy === 'medium' ? '中等精度' : '低精度'}
+                {ipData.accuracy === 'high' ? 'High' : 
+                 ipData.accuracy === 'medium' ? 'Medium' : 'Low'}
               </span>
             </div>
             
             {ipData.location.accuracy_radius && (
               <div>
-                <span className="text-[rgb(var(--color-text-secondary))]">精度半径:</span>
+                <span className="text-[rgb(var(--color-text-secondary))]">Accuracy radius:</span>
                 <span className="ml-2 font-medium text-[rgb(var(--color-text-primary))]">
                   ~{ipData.location.accuracy_radius}km
                 </span>
@@ -160,7 +160,7 @@ export default function ResponsiveMap({ ipData, className }: ResponsiveMapProps)
             )}
             
             <div>
-              <span className="text-[rgb(var(--color-text-secondary))]">数据源:</span>
+              <span className="text-[rgb(var(--color-text-secondary))]">Data source:</span>
               <span className="ml-2 font-medium text-[rgb(var(--color-text-primary))]">
                 {ipData.source}
               </span>

@@ -1,89 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-import { detectIPVersion, getClientIP, isValidIP } from "@/lib/ip-detection";
-import { IPInfo } from "@/lib/store";
-import { geoIPService } from "@/lib/geoip";
-
-// 真实的IP查询函数，使用MMDB数据库
-async function queryIPInfo(ip: string): Promise<IPInfo> {
-  const ipVersion = detectIPVersion(ip);
-
-  if (ipVersion === "invalid") {
-    throw new Error("无效的IP地址格式");
-  }
-
+import { isIP } from "node:net";
+import { getClientIP, checkPrivateIP } from "@/lib/ip-detection";
+import type { IPInfo } from "@/lib/store";
+export const runtime = "nodejs";
+async function lookup(request: NextRequest, input?: unknown) {
+  if (input !== undefined && typeof input !== "string") return NextResponse.json({error: "IP address must be a string."}, {status: 400});
+  const explicit = typeof input === "string" ? input.trim() : "";
+  if (explicit && (!isIP(explicit) || checkPrivateIP(explicit).isPrivate)) return NextResponse.json({error: "Enter a valid public IPv4 or IPv6 address."}, {status: 400});
+  const client = getClientIP(request);
+  const ip = explicit || (client && isIP(client) && !checkPrivateIP(client).isPrivate ? client : "");
   try {
-    // 使用真实的GeoIP服务查询
-    const result = await geoIPService.queryIPInfo(ip);
-    return result;
-  } catch (error) {
-    console.error("IP查询失败:", error);
-    throw new Error(
-      `IP查询失败: ${error instanceof Error ? error.message : "未知错误"}`
-    );
-  }
-}
-
-// GET请求：获取客户端IP信息
-export async function GET(request: NextRequest) {
-  try {
-    const clientIP = getClientIP(request);
-
-    if (!clientIP) {
-      return NextResponse.json(
-        { error: "无法获取客户端IP地址" },
-        { status: 400 }
-      );
+    const response = await fetch("https://ipwho.is/" + encodeURIComponent(ip) + "?lang=en", {signal: AbortSignal.timeout(10000), next: {revalidate: 300}});
+    if (!response.ok) return NextResponse.json({error: response.status === 429 ? "Lookup limit reached. Please try again later." : "Location service is temporarily unavailable."}, {status: response.status === 429 ? 429 : 502});
+    const data = await response.json();
+    if (!data.success || typeof data.ip !== "string" || !isIP(data.ip) || !Number.isFinite(data.latitude) || !Number.isFinite(data.longitude)) return NextResponse.json({error: data.message || "No location found for this address."}, {status: 422});
+    const result: IPInfo = {
+      ip: data.ip, country: data.country, countryCode: data.country_code,
+      province: data.region, provinceCode: data.region_code, city: data.city,
+      regions: [data.country, data.region, data.city].filter(Boolean),
+      isp: data.connection?.isp, as: {number: data.connection?.asn, name: data.connection?.org},
+      location: {latitude: data.latitude, longitude: data.longitude},
+      timezone: data.timezone?.id, postal: data.postal,
+      accuracy: "medium", source: "IPWhois", ipVersion: isIP(data.ip) === 6 ? "IPv6" : "IPv4"
+    };
+    const key = process.env.GEOAPIFY_API_KEY;
+    if (key) {
+      try {
+        const url = new URL("https://api.geoapify.com/v1/ipinfo");
+        url.search = new URLSearchParams({ ip: result.ip, apiKey: key }).toString();
+        const geoResponse = await fetch(url, { signal: AbortSignal.timeout(7000), next: { revalidate: 300 } });
+        if (geoResponse.ok) {
+          const geo = await geoResponse.json();
+          if (geo.ip === result.ip && geo.country?.name && Number.isFinite(geo.location?.latitude) && Number.isFinite(geo.location?.longitude)) {
+            result.country = geo.country.names?.en || geo.country.name;
+            result.countryCode = geo.country.iso_code;
+            result.city = geo.city?.names?.en || geo.city?.name;
+            result.province = geo.state?.name;
+            result.provinceCode = undefined;
+            result.postal = geo.postal?.code;
+            result.regions = [result.country, result.province, result.city].filter((value): value is string => Boolean(value));
+            result.location = { latitude: geo.location.latitude, longitude: geo.location.longitude };
+            result.source = "Geoapify";
+          }
+        }
+      } catch { /* Retain the IPWhois location if Geoapify is unavailable. */ }
     }
-
-    const result = await queryIPInfo(clientIP);
-
-    return NextResponse.json(result, {
-      headers: {
-        "Cache-Control": "public, max-age=300, s-maxage=300", // 缓存5分钟
-      },
-    });
-  } catch (error) {
-    console.error("IP查询错误:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "查询失败" },
-      { status: 500 }
-    );
-  }
+    return NextResponse.json(result, {headers: {"Cache-Control": "private, no-store"}});
+  } catch { return NextResponse.json({error: "Location service could not be reached. Please try again."}, {status: 502}); }
 }
-
-// POST请求：查询指定IP信息
+export async function GET(request: NextRequest) { return lookup(request, request.nextUrl.searchParams.get("ip") ?? undefined); }
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { ip } = body;
-
-    // 如果没有提供IP，使用客户端IP
-    const queryIP = ip || getClientIP(request);
-
-    if (!queryIP) {
-      return NextResponse.json(
-        { error: "请提供有效的IP地址" },
-        { status: 400 }
-      );
-    }
-
-    // 验证IP格式
-    if (!isValidIP(queryIP)) {
-      return NextResponse.json({ error: "无效的IP地址格式" }, { status: 400 });
-    }
-
-    const result = await queryIPInfo(queryIP);
-
-    return NextResponse.json(result, {
-      headers: {
-        "Cache-Control": "public, max-age=300, s-maxage=300", // 缓存5分钟
-      },
-    });
-  } catch (error) {
-    console.error("IP查询错误:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "查询失败" },
-      { status: 500 }
-    );
-  }
+  let body;
+  try { body = await request.json(); } catch { return NextResponse.json({error: "Request body must be valid JSON."}, {status: 400}); }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({error: "Request body must be an object."}, {status: 400});
+  return lookup(request, body.ip);
 }

@@ -63,7 +63,7 @@ class BGPCache {
 const bgpCache = new BGPCache();
 
 /**
- * 查询 ASN 的 BGP 对等关系
+ * 查询 ASN 的 BGP peers
  */
 export async function fetchBGPPeers(asn: number): Promise<ProcessedBGPData> {
   // 检查缓存
@@ -85,7 +85,7 @@ export async function fetchBGPPeers(asn: number): Promise<ProcessedBGPData> {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
         errorData.error ||
-          `BGP API 请求失败: ${response.status} ${response.statusText}`
+          `BGP API Request failed: ${response.status} ${response.statusText}`
       );
     }
 
@@ -96,11 +96,11 @@ export async function fetchBGPPeers(asn: number): Promise<ProcessedBGPData> {
 
     return processedData;
   } catch (error) {
-    console.error("BGP API 查询失败:", error);
+    console.error("BGP API Lookup failed:", error);
     throw new Error(
       error instanceof Error
-        ? `BGP 查询失败: ${error.message}`
-        : "BGP 查询失败: 未知错误"
+        ? `BGP Lookup failed: ${error.message}`
+        : "BGP Lookup failed: Unknown错误"
     );
   }
 }

@@ -1,29 +1,9 @@
-version: '3.8'
-
 services:
   ipinfo:
     build: .
     ports:
       - "3000:3000"
-    volumes:
-      # 将本地的 data 目录挂载到容器的 /app/lib/data
-      # 这样数据就会持久化在宿主机上
-      - ./data:/app/lib/data
     environment:
       - NODE_ENV=production
+      - GEOAPIFY_API_KEY=${GEOAPIFY_API_KEY:-}
     restart: unless-stopped
-
-# 可选：如果你想使用命名卷而不是绑定挂载
-# services:
-#   ipinfo:
-#     build: .
-#     ports:
-#       - "3000:3000"
-#     volumes:
-#       - ipinfo_data:/app/lib/data
-#     environment:
-#       - NODE_ENV=production
-#     restart: unless-stopped
-# 
-# volumes:
-#   ipinfo_data:
