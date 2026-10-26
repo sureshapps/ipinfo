@@ -56,7 +56,7 @@ export function PlaceholdersAndVanishInput({
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
 
-  // 支持受控模式 - 当外部value变化时，更新内部value
+  // 支持受控 mode - 当外部value变化时，更新内部value
   useEffect(() => {
     if (externalValue !== undefined) {
       setValue(externalValue);
@@ -222,6 +222,7 @@ export function PlaceholdersAndVanishInput({
         ref={inputRef}
         value={value}
         type="text"
+        aria-label="IP address"
         className={cn(
           "w-full relative text-sm sm:text-base z-50 border-none dark:text-white bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
           animating && "text-transparent dark:text-transparent"
@@ -231,6 +232,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
+        aria-label="Look up IP address"
         className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
       >
         <motion.svg

@@ -1,143 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// BGP API 响应类型
-interface BGPPeer {
-  asn: number;
-  name: string;
-  description: string;
-  country_code: string;
-}
-
-interface BGPPeersResponse {
-  status: string;
-  status_message: string;
-  data: {
-    ipv4_peers: BGPPeer[];
-    ipv6_peers: BGPPeer[];
-  };
-  "@meta": {
-    time_zone: string;
-    api_version: number;
-    execution_time: string;
-  };
-}
-
-// GET请求：代理BGP API查询
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ asn: string }> }
-) {
-  try {
-    const { asn } = await context.params;
-
-    // 验证 ASN 格式
-    const asnNumber = parseInt(asn, 10);
-    if (isNaN(asnNumber) || asnNumber <= 0 || asnNumber > 4294967295) {
-      return NextResponse.json({ error: "无效的 ASN 编号" }, { status: 400 });
-    }
-
-    // 调用 BGP API
-    const bgpApiUrl = `https://api.bgpview.io/asn/${asnNumber}/peers`;
-
-    const response = await fetch(bgpApiUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      },
-      // 添加超时控制
-      signal: AbortSignal.timeout(10000), // 10秒超时
-    });
-
-    if (!response.ok) {
-      console.error(
-        `BGP API 请求失败: ${response.status} ${response.statusText}`
-      );
-
-      if (response.status === 404) {
-        return NextResponse.json(
-          { error: "未找到该 ASN 的信息" },
-          { status: 404 }
-        );
-      }
-
-      if (response.status === 429) {
-        return NextResponse.json(
-          { error: "请求过于频繁，请稍后重试" },
-          { status: 429 }
-        );
-      }
-
-      return NextResponse.json(
-        { error: "BGP 服务暂时不可用" },
-        { status: 503 }
-      );
-    }
-
-    const data: BGPPeersResponse = await response.json();
-
-    // 验证响应数据格式
-    if (!data || data.status !== "ok") {
-      console.error("BGP API 返回错误:", data?.status_message || "未知错误");
-      return NextResponse.json(
-        { error: data?.status_message || "BGP 数据格式错误" },
-        { status: 500 }
-      );
-    }
-
-    // 处理数据
-    const processedData = {
-      centerAsn: asnNumber,
-      centerName: `AS${asnNumber}`,
-      ipv4Peers: data.data.ipv4_peers || [],
-      ipv6Peers: data.data.ipv6_peers || [],
-      allPeers: [
-        ...(data.data.ipv4_peers || []),
-        ...(data.data.ipv6_peers || []),
-      ],
-    };
-
-    // 去重处理
-    const uniquePeers = new Map<number, BGPPeer>();
-    processedData.allPeers.forEach((peer) => {
-      uniquePeers.set(peer.asn, peer);
-    });
-    processedData.allPeers = Array.from(uniquePeers.values());
-
-    return NextResponse.json(processedData, {
-      headers: {
-        // 缓存 30 分钟
-        "Cache-Control": "public, max-age=1800, s-maxage=1800",
-        // 允许跨域（虽然在这里不是必需的，但为了完整性）
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-    });
-  } catch (error) {
-    console.error("BGP 代理查询错误:", error);
-
-    // 处理不同类型的错误
-    if (error instanceof Error) {
-      if (error.name === "AbortError") {
-        return NextResponse.json(
-          { error: "请求超时，请稍后重试" },
-          { status: 408 }
-        );
-      }
-
-      if (error.message.includes("fetch")) {
-        return NextResponse.json(
-          { error: "网络连接错误，请检查网络连接" },
-          { status: 503 }
-        );
-      }
-    }
-
-    return NextResponse.json(
-      { error: "BGP 查询失败，请稍后重试" },
-      { status: 500 }
-    );
-  }
+interface Neighbour { asn: number; type: string; v4_peers: number; v6_peers: number }
+export async function GET(_request: NextRequest, context: {params: Promise<{asn: string}>}) {
+ const {asn} = await context.params;
+ const number = Number(asn);
+ if (!/^\d+$/.test(asn) || !Number.isSafeInteger(number) || number < 1 || number > 4294967295) return NextResponse.json({error: "Invalid ASN number."}, {status: 400});
+ try {
+  const response = await fetch("https://stat.ripe.net/data/asn-neighbours/data.json?resource=AS" + number + "&preferred_version=3.2", {signal: AbortSignal.timeout(12000), next: {revalidate: 1800}});
+  if (!response.ok) throw new Error("BGP service is temporarily unavailable.");
+  const result = await response.json();
+  if (result.status !== "ok" || !Array.isArray(result.data?.neighbours)) throw new Error("Invalid BGP response.");
+  const neighbours: Neighbour[] = result.data.neighbours;
+  const peer = (n: Neighbour) => ({asn: n.asn, name: "AS" + n.asn, description: "Observed " + n.type + " neighbour (RIPE RIS)", country_code: ""});
+  const ipv4Peers = neighbours.filter(n => n.v4_peers > 0).map(peer);
+  const ipv6Peers = neighbours.filter(n => n.v6_peers > 0).map(peer);
+  const allPeers = Array.from(new Map(neighbours.map(n => [n.asn, peer(n)])).values());
+  return NextResponse.json({centerAsn: number, centerName: "AS" + number, ipv4Peers, ipv6Peers, allPeers}, {headers: {"Cache-Control": "public, max-age=1800"}});
+ } catch { return NextResponse.json({error: "BGP service could not be reached. Please try again."}, {status: 502}); }
 }

@@ -27,8 +27,8 @@ const MapLoadingPlaceholder = ({ className }: { className?: string }) => (
           <MapPin className="w-5 h-5 text-green-500" />
         </div>
         <div>
-          <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">地理位置</h3>
-          <p className="text-sm text-[rgb(var(--color-text-secondary))]">加载中...</p>
+          <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">Location</h3>
+          <p className="text-sm text-[rgb(var(--color-text-secondary))]">Loading...</p>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@ const MapLoadingPlaceholder = ({ className }: { className?: string }) => (
         >
           <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
         </motion.div>
-        <p className="text-[rgb(var(--color-text-secondary))]">正在加载地图...</p>
+        <p className="text-[rgb(var(--color-text-secondary))]">Loading map...</p>
       </div>
     </div>
   </motion.div>

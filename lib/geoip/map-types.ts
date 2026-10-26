@@ -17,21 +17,21 @@ export interface TileProvider {
 // 地图瓦片配置
 export const MAP_TILE_PROVIDERS: Record<MapTheme, TileProvider> = {
   light: {
-    name: "CartoDB Positron",
-    url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    name: "Geoapify Positron",
+    url: "/api/map-tiles/{z}/{x}/{y}?theme=light",
+    attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> | &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a>',
     maxZoom: 18,
   },
   dark: {
-    name: "CartoDB Dark Matter",
-    url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    name: "Geoapify Dark Matter",
+    url: "/api/map-tiles/{z}/{x}/{y}?theme=dark",
+    attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> | &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a>',
     maxZoom: 18,
   },
   auto: {
-    name: "CartoDB Positron",
-    url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    name: "Geoapify Positron",
+    url: "/api/map-tiles/{z}/{x}/{y}?theme=light",
+    attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> | &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a>',
     maxZoom: 18,
   },
 };

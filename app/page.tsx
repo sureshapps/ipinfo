@@ -8,6 +8,7 @@ import IPQueryForm from "@/components/ip-query-form";
 import IPInfoCard from "@/components/ip-info-card";
 import VersionSwitcher from "@/components/version-switcher";
 import ThemeToggle from "@/components/theme-toggle";
+import LocationBackground from "@/components/location-background";
 
 export default function Home() {
   const { 
@@ -22,7 +23,8 @@ export default function Home() {
   }, [executeQuery]);
 
   return (
-    <div className="min-h-screen bg-gradient-main transition-colors duration-300">
+    <div className="relative isolate min-h-screen bg-gradient-main transition-colors duration-300">
+      <LocationBackground />
       {/* 背景装饰 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -right-32 w-64 h-64 bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-3xl transition-colors duration-500"></div>
@@ -76,7 +78,7 @@ export default function Home() {
                   <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
                 </motion.div>
                 <p className="text-[rgb(var(--color-text-secondary))]">
-                  正在查询中...
+                  Looking up IP address...
                 </p>
               </motion.div>
             )}
@@ -119,7 +121,7 @@ export default function Home() {
                   <Search className="w-10 h-10 text-[rgb(var(--color-text-muted))]" />
                 </motion.div>
                 <p className="text-[rgb(var(--color-text-secondary))] text-center max-w-md">
-                  输入IP地址进行查询，或留空查看当前IP信息
+                  Enter an IP address, or leave blank to look up your public IP.
                 </p>
               </motion.div>
             )}
@@ -133,10 +135,10 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center py-6 px-6 mt-auto"
+          className="text-center pt-6 pb-20 px-6 mt-auto"
         >
           <div className="text-xs text-[rgb(var(--color-text-muted))]">
-            <p>© 2024 专注于提供精确的IP地理位置信息</p>
+            <p>IPInfo — IP geolocation and network information</p>
           </div>
         </motion.footer>
       </div>

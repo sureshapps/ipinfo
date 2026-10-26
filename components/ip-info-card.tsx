@@ -50,10 +50,10 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     name?: string;
   } | null>(null);
 
-  // 获取store中的代理检测状态和自动检测状态
+  // 获取store中的Connection check状态和自动检测状态
   const { isProxyDetecting, executeProxyDetection, isAutoDetected } = useIPQueryStore();
 
-  // 溯源功能
+  // Trace功能
   const handleTrace = async () => {
     if (isTracing) return;
 
@@ -68,22 +68,22 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
       });
 
       if (!response.ok) {
-        throw new Error(`溯源失败: ${response.statusText}`);
+        throw new Error(`Trace failed: ${response.statusText}`);
       }
 
       const meituanData: IPInfo = await response.json();
       setTracedData(meituanData);
       setCurrentData(meituanData);
 
-      toast.success("溯源成功", {
-        description: `已获取美团数据源的详细位置信息`,
+      toast.success("Trace complete", {
+        description: `Retrieved location details from Meituan`,
         duration: 3000,
       });
     } catch (error) {
-      console.error("溯源失败:", error);
-      toast.error("溯源失败", {
+      console.error("Trace failed:", error);
+      toast.error("Trace failed", {
         description:
-          error instanceof Error ? error.message : "无法获取美团数据",
+          error instanceof Error ? error.message : "Unable to retrieve Meituan data",
         duration: 4000,
       });
     } finally {
@@ -91,7 +91,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     }
   };
 
-  // 重置到原始数据
+  // Reset到原始数据
   const resetToOriginal = () => {
     setCurrentData(ipData);
     setTracedData(null);
@@ -102,7 +102,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     const updateTime = () => {
       if (currentData.timezone) {
         setCurrentTime(
-          new Date().toLocaleString("zh-CN", {
+          new Date().toLocaleString("en-US", {
             timeZone: currentData.timezone,
             year: "numeric",
             month: "2-digit",
@@ -121,7 +121,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     return () => clearInterval(interval);
   }, [currentData.timezone]);
 
-  // 当原始数据变化时，重置状态
+  // 当原始数据变化时，Reset状态
   useEffect(() => {
     setCurrentData(ipData);
     setTracedData(null);
@@ -138,7 +138,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     setSelectedASN(null);
   };
 
-  // 代理检测处理函数
+  // Connection check处理函数
   const handleProxyDetection = async () => {
     if (isProxyDetecting) return;
     await executeProxyDetection();
@@ -149,35 +149,35 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     switch (proxyType) {
       case 'direct':
         return {
-          text: '直连',
+          text: 'Direct',
           icon: CheckCircle,
           color: 'text-green-600 dark:text-green-400',
           bgColor: 'bg-green-50 dark:bg-green-900/30'
         };
       case 'domestic':
         return {
-          text: '国内代理',
+          text: 'Domestic proxy',
           icon: Shield,
           color: 'text-blue-600 dark:text-blue-400',
           bgColor: 'bg-blue-50 dark:bg-blue-900/30'
         };
       case 'foreign':
         return {
-          text: '国外代理',
+          text: 'Foreign proxy',
           icon: Globe,
           color: 'text-purple-600 dark:text-purple-400',
           bgColor: 'bg-purple-50 dark:bg-purple-900/30'
         };
       case 'mixed':
         return {
-          text: '混合代理',
+          text: 'Mixed proxy',
           icon: Shuffle,
           color: 'text-orange-600 dark:text-orange-400',
           bgColor: 'bg-orange-50 dark:bg-orange-900/30'
         };
       default:
         return {
-          text: '未知',
+          text: 'Unknown',
           icon: HelpCircle,
           color: 'text-gray-600 dark:text-gray-400',
           bgColor: 'bg-gray-50 dark:bg-gray-900/30'
@@ -188,20 +188,20 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
   const copyToClipboard = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("复制成功", {
+      toast.success("Copied", {
         description: `${type}: ${text}`,
         duration: 2000,
       });
     } catch (err) {
-      console.error("复制失败:", err);
-      toast.error("复制失败", {
-        description: "无法访问剪贴板，请手动复制",
+      console.error("Copy failed:", err);
+      toast.error("Copy failed", {
+        description: "Clipboard unavailable. Please copy manually.",
         duration: 3000,
       });
     }
   };
 
-  // 检查是否为有效的国家代码
+  // 检查是否为有效的Country code
   const isValidCountryCode = (code: string) => {
     return (
       code &&
@@ -214,9 +214,9 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
     );
   };
 
-  // 检查是否为私有IP
+  // 检查是否为PrivateIP
   const isPrivateIP = (ip: string) => {
-    // 私有IPv4地址范围
+    // PrivateIPv4地址范围
     const privateIPv4Ranges = [
       /^10\./,
       /^192\.168\./,
@@ -227,7 +227,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
       /^255\.255\.255\.255$/,
     ];
 
-    // 私有IPv6地址
+    // PrivateIPv6地址
     const privateIPv6Ranges = [
       /^::1$/,
       /^fc[0-9a-f]{2}:/i,
@@ -275,7 +275,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
         <div
           className={`bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center ${className}`}
           style={style}
-          title={isPrivate ? "私有地址" : "未知地区"}
+          title={isPrivate ? "Private address" : "Unknown region"}
         >
           {isPrivate ? (
             <Shield className="w-3 h-3 text-gray-600" />
@@ -301,7 +301,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
         <div
           className={`bg-gray-200 rounded flex items-center justify-center ${className}`}
           style={style}
-          title="国旗加载失败"
+          title="Flag unavailable"
         >
           <Globe className="w-3 h-3 text-gray-500" />
         </div>
@@ -337,7 +337,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
       : "bg-purple-50 dark:bg-purple-950/50";
   };
 
-  // 获取数据源颜色
+  // 获取Data source颜色
   const getSourceColor = (source: string) => {
     if (source === "MeiTuan") return "text-yellow-600";
     return source === "MaxMind" ? "text-blue-600" : "text-green-600";
@@ -379,7 +379,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
         variants={itemVariants}
         className="bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-3xl shadow-xl border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300"
       >
-        {/* 头部 - IP地址 */}
+        {/* 头部 - IP address */}
         <div
           className={`px-4 md:px-8 py-4 md:py-6 ${getVersionBg(
             currentData.ipVersion
@@ -426,12 +426,12 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     />
                     <span className="text-sm text-[rgb(var(--color-text-secondary))]">
                       {isPrivateIP(currentData.ip)
-                        ? "本地网络"
+                        ? "Local network"
                         : currentData.country}
                     </span>
                     {isPrivateIP(currentData.ip) && (
                       <span className="text-xs text-[rgb(var(--color-text-muted))] bg-[rgb(var(--color-surface-hover))] px-2 py-0.5 rounded-full transition-colors duration-300">
-                        私有
+                        Private
                       </span>
                     )}
                   </div>
@@ -447,8 +447,8 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
             </div>
 
             <div className="flex items-center space-x-2 flex-shrink-0">
-              {/* 溯源按钮 */}
-              {currentData.source !== "MeiTuan" &&
+              {/* Trace按钮 */}
+              {!(["IPWhois", "Geoapify"] as string[]).includes(currentData.source) && currentData.source !== "MeiTuan" &&
                 !isPrivateIP(currentData.ip) && (
                   <button
                     onClick={handleTrace}
@@ -461,18 +461,18 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                       <Search className="w-4 h-4 text-yellow-600" />
                     )}
                     <span className="text-sm font-medium text-yellow-700 dark:text-yellow-400">
-                      {isTracing ? "溯源中..." : "溯源"}
+                      {isTracing ? "Looking up..." : "Trace"}
                     </span>
                   </button>
                 )}
 
-              {/* 代理检测按钮 - 只在查询用户自己的IP时显示 */}
-              {isAutoDetected && !isPrivateIP(currentData.ip) && (
+              {/* Connection check按钮 - 只在查询用户自己的IP时显示 */}
+              {!(["IPWhois", "Geoapify"] as string[]).includes(currentData.source) && isAutoDetected && !isPrivateIP(currentData.ip) && (
                 <button
                   onClick={handleProxyDetection}
                   disabled={isProxyDetecting}
                   className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-cyan-50 dark:bg-cyan-900/30 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="检测您当前的网络代理状态"
+                  title="Check your current connection"
                 >
                   {isProxyDetecting ? (
                     <Loader2 className="w-4 h-4 text-cyan-600 animate-spin" />
@@ -480,24 +480,24 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <Activity className="w-4 h-4 text-cyan-600" />
                   )}
                   <span className="text-sm font-medium text-cyan-700 dark:text-cyan-400">
-                    {isProxyDetecting ? "检测中..." : "代理检测"}
+                    {isProxyDetecting ? "Checking..." : "Connection check"}
                   </span>
                 </button>
               )}
 
-              {/* 重置按钮 - 仅在已溯源时显示 */}
+              {/* Reset按钮 - 仅在已Trace时显示 */}
               {tracedData && (
                 <button
                   onClick={resetToOriginal}
                   className="px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-900/30 hover:bg-gray-100 dark:hover:bg-gray-900/50 transition-colors duration-200 text-sm font-medium text-gray-600 dark:text-gray-400"
                 >
-                  重置
+                  Reset
                 </button>
               )}
 
               {/* 复制按钮 */}
               <button
-                onClick={() => copyToClipboard(currentData.ip, "IP地址")}
+                onClick={() => copyToClipboard(currentData.ip, "IP address")}
                 className="p-2 rounded-xl hover:bg-[rgb(var(--color-surface-hover))] transition-colors duration-200"
               >
                 <Copy className="w-5 h-5 text-[rgb(var(--color-text-muted))]" />
@@ -509,7 +509,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
         {/* 详细信息网格 */}
         <div className="p-4 md:p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* 地理位置 */}
+            {/* Location */}
             <motion.div
               variants={itemVariants}
               className="space-y-4 md:space-y-3"
@@ -517,7 +517,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
               <div className="flex items-center space-x-2">
                 <MapPin className="w-5 h-5 text-green-500" />
                 <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                  地理位置
+                  Location
                 </h3>
               </div>
 
@@ -538,34 +538,34 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     </p>
                     {formatRegionsShort() && (
                       <p className="text-sm text-[rgb(var(--color-text-secondary))]">
-                        简称: {formatRegionsShort()}
+                        Short name: {formatRegionsShort()}
                       </p>
                     )}
                     {/* 美团特有信息 */}
                     {currentData.source === "MeiTuan" &&
                       currentData.meituan?.detail && (
                         <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
-                          详细地址: {currentData.meituan.detail}
+                          Street address: {currentData.meituan.detail}
                         </p>
                       )}
                   </div>
                 </div>
                 {currentData.postal && (
                   <p className="text-sm text-[rgb(var(--color-text-secondary))]">
-                    邮编: {currentData.postal}
+                    Postal code: {currentData.postal}
                   </p>
                 )}
                 <div className="text-sm text-[rgb(var(--color-text-muted))] space-y-1">
-                  <p>纬度: {currentData.location.latitude.toFixed(4)}°</p>
-                  <p>经度: {currentData.location.longitude.toFixed(4)}°</p>
+                  <p>Latitude: {currentData.location.latitude.toFixed(4)}°</p>
+                  <p>Longitude: {currentData.location.longitude.toFixed(4)}°</p>
                   {currentData.location.accuracy_radius && (
-                    <p>精度半径: ~{currentData.location.accuracy_radius}km</p>
+                    <p>Accuracy radius: ~{currentData.location.accuracy_radius}km</p>
                   )}
                 </div>
               </div>
             </motion.div>
 
-            {/* 网络信息 - 增强ASN展示 */}
+            {/* Network information - 增强ASN展示 */}
             <motion.div
               variants={itemVariants}
               className="space-y-4 md:space-y-3"
@@ -573,17 +573,17 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
               <div className="flex items-center space-x-2">
                 <Network className="w-5 h-5 text-blue-500" />
                 <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                  网络信息
+                  Network information
                 </h3>
               </div>
               <div className="pl-6 md:pl-7 space-y-4 md:space-y-3">
-                {/* ASN编号 */}
+                {/* ASN number */}
                 {currentData.as?.number && (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Hash className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        ASN编号
+                        ASN number
                       </span>
                     </div>
                     <button
@@ -594,20 +594,20 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                         )
                       }
                       className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] hover:bg-blue-50 dark:hover:bg-blue-900/30 px-2 py-1 rounded text-[rgb(var(--color-text-primary))] hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-700"
-                      title="点击查看 BGP 对等关系"
+                      title="View BGP peers"
                     >
                       AS{currentData.as.number}
                     </button>
                   </div>
                 )}
 
-                {/* ASN组织 */}
+                {/* ASN organization */}
                 {currentData.as?.name && (
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-2">
                       <Building2 className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        ASN组织
+                        ASN organization
                       </span>
                     </div>
                     <span className="font-medium text-right text-[rgb(var(--color-text-primary))] max-w-xs break-words">
@@ -622,7 +622,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Router className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        运营商
+                        Provider
                       </span>
                     </div>
                     <span className="font-medium text-[rgb(var(--color-text-primary))]">
@@ -637,7 +637,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Router className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        运营商
+                        Provider
                       </span>
                     </div>
                     <span className="font-medium text-[rgb(var(--color-text-primary))]">
@@ -646,13 +646,13 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                   </div>
                 )}
 
-                {/* 网络类型 */}
+                {/* Network type */}
                 {currentData.type && (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Server className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        网络类型
+                        Network type
                       </span>
                     </div>
                     <span className="font-medium text-[rgb(var(--color-text-primary))]">
@@ -667,7 +667,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Layers className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        网络段
+                        Network prefix
                       </span>
                     </div>
                     <span className="font-mono text-sm text-[rgb(var(--color-text-primary))]">
@@ -676,12 +676,12 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                   </div>
                 )}
 
-                {/* 数据精度 */}
+                {/* 数据Accuracy */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Eye className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                     <span className="text-[rgb(var(--color-text-secondary))]">
-                      精度
+                      Accuracy
                     </span>
                   </div>
                   <span
@@ -699,18 +699,18 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <Zap className="w-3 h-3" />
                     <span>
                       {currentData.accuracy === "high"
-                        ? "高精度"
+                        ? "High"
                         : currentData.accuracy === "medium"
-                        ? "中等精度"
-                        : "低精度"}
+                        ? "Medium"
+                        : "Low"}
                     </span>
                   </span>
                 </div>
               </div>
             </motion.div>
 
-            {/* 代理检测结果 - 只在查询用户自己的IP时显示 */}
-            {isAutoDetected && currentData.proxyDetection && (
+            {/* Connection check results - 只在查询用户自己的IP时显示 */}
+            {!(["IPWhois", "Geoapify"] as string[]).includes(currentData.source) && isAutoDetected && currentData.proxyDetection && (
               <motion.div
                 variants={itemVariants}
                 className="space-y-4 md:space-y-3 md:col-span-2"
@@ -718,7 +718,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                 <div className="flex items-center space-x-2">
                   <Activity className="w-5 h-5 text-cyan-500" />
                   <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                    代理检测结果
+                    Connection check results
                   </h3>
                 </div>
 
@@ -728,7 +728,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Shield className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        连接状态
+                        Connection status
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -742,7 +742,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                         );
                       })()}
                       <span className="text-xs text-[rgb(var(--color-text-muted))]">
-                        置信度: {Math.round(currentData.proxyDetection.confidence * 100)}%
+                        Confidence: {Math.round(currentData.proxyDetection.confidence * 100)}%
                       </span>
                     </div>
                   </div>
@@ -753,33 +753,33 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="bg-[rgb(var(--color-surface))] rounded-lg p-3">
                       <div className="text-xs text-[rgb(var(--color-text-muted))] mb-1">Headers IP</div>
                       <div className="font-mono text-sm text-[rgb(var(--color-text-primary))]">
-                        {currentData.proxyDetection.headerIP || '未获取'}
+                        {currentData.proxyDetection.headerIP || 'Unavailable'}
                       </div>
                     </div>
 
-                    {/* 国内源IP */}
+                    {/* Domestic sourceIP */}
                     <div className="bg-[rgb(var(--color-surface))] rounded-lg p-3">
-                      <div className="text-xs text-[rgb(var(--color-text-muted))] mb-1">国内源</div>
+                      <div className="text-xs text-[rgb(var(--color-text-muted))] mb-1">Domestic source</div>
                       <div className="font-mono text-sm text-[rgb(var(--color-text-primary))]">
-                        {currentData.proxyDetection.domesticIP || '获取失败'}
+                        {currentData.proxyDetection.domesticIP || 'Unavailable'}
                       </div>
                     </div>
 
-                    {/* 国外源IP */}
+                    {/* International sourceIP */}
                     <div className="bg-[rgb(var(--color-surface))] rounded-lg p-3">
-                      <div className="text-xs text-[rgb(var(--color-text-muted))] mb-1">国外源</div>
+                      <div className="text-xs text-[rgb(var(--color-text-muted))] mb-1">International source</div>
                       <div className="font-mono text-sm text-[rgb(var(--color-text-primary))]">
-                        {currentData.proxyDetection.foreignIP || '获取失败'}
+                        {currentData.proxyDetection.foreignIP || 'Unavailable'}
                       </div>
                     </div>
                   </div>
 
                   {/* 检测详情 */}
                   <div className="text-xs text-[rgb(var(--color-text-muted))] space-y-1">
-                    <p>检测耗时: {currentData.proxyDetection.detectionTime}ms</p>
+                    <p>Check duration: {currentData.proxyDetection.detectionTime}ms</p>
                     {currentData.proxyDetection.errors.length > 0 && (
                       <div>
-                        <p className="text-orange-600 dark:text-orange-400">检测警告:</p>
+                        <p className="text-orange-600 dark:text-orange-400">Warnings:</p>
                         <ul className="list-disc list-inside ml-2 space-y-1">
                           {currentData.proxyDetection.errors.map((error, index) => (
                             <li key={index} className="text-orange-600 dark:text-orange-400">
@@ -794,7 +794,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
               </motion.div>
             )}
 
-            {/* 时区信息 */}
+            {/* Time zone */}
             {currentData.timezone && (
               <motion.div
                 variants={itemVariants}
@@ -803,7 +803,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                 <div className="flex items-center space-x-2">
                   <Clock className="w-5 h-5 text-orange-500" />
                   <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                    时区信息
+                    Time zone
                   </h3>
                 </div>
                 <div className="pl-6 md:pl-7 space-y-3 md:space-y-2">
@@ -812,14 +812,14 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                   </p>
                   {currentTime && (
                     <p className="text-sm text-[rgb(var(--color-text-secondary))]">
-                      当地时间: {currentTime}
+                      Local time: {currentTime}
                     </p>
                   )}
                 </div>
               </motion.div>
             )}
 
-            {/* 注册国家信息 */}
+            {/* Registered country信息 */}
             {currentData.registered_country && (
               <motion.div
                 variants={itemVariants}
@@ -828,7 +828,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                 <div className="flex items-center space-x-2">
                   <Shield className="w-5 h-5 text-[rgb(var(--color-text-muted))]" />
                   <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                    注册信息
+                    Registration
                   </h3>
                 </div>
                 <div className="pl-6 md:pl-7 space-y-4 md:space-y-3">
@@ -836,7 +836,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Flag className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        注册国家
+                        Registered country
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -857,7 +857,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <MapIcon className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        注册代码
+                        Registration code
                       </span>
                     </div>
                     <span className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] px-2 py-1 rounded text-[rgb(var(--color-text-primary))] transition-colors duration-300">
@@ -868,7 +868,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
               </motion.div>
             )}
 
-            {/* 其他区域代码信息 */}
+            {/* 其他Region codes信息 */}
             {(currentData.countryCode ||
               currentData.provinceCode ||
               currentData.cityCode) && (
@@ -879,7 +879,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                 <div className="flex items-center space-x-2">
                   <Shield className="w-5 h-5 text-[rgb(var(--color-text-muted))]" />
                   <h3 className="font-semibold text-[rgb(var(--color-text-primary))]">
-                    区域代码
+                    Region codes
                   </h3>
                 </div>
                 <div className="pl-7 space-y-3">
@@ -887,7 +887,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     <div className="flex items-center space-x-2">
                       <Flag className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                       <span className="text-[rgb(var(--color-text-secondary))]">
-                        国家代码
+                        Country code
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -910,7 +910,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                       <div className="flex items-center space-x-2">
                         <MapIcon className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                         <span className="text-[rgb(var(--color-text-secondary))]">
-                          省份代码
+                          Region code
                         </span>
                       </div>
                       <span className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] px-2 py-1 rounded text-[rgb(var(--color-text-primary))] transition-colors duration-300">
@@ -923,7 +923,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                       <div className="flex items-center space-x-2">
                         <Building className="w-4 h-4 text-[rgb(var(--color-text-muted))]" />
                         <span className="text-[rgb(var(--color-text-secondary))]">
-                          城市代码
+                          City code
                         </span>
                       </div>
                       <span className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] px-2 py-1 rounded text-[rgb(var(--color-text-primary))] transition-colors duration-300">
@@ -943,7 +943,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
         <LazyIPMap ipData={currentData} />
       </motion.div>
 
-      {/* BGP 对等关系对话框 */}
+      {/* BGP peers对话框 */}
       {selectedASN && (
         <BGPPeersDialog
           asn={selectedASN.asn}

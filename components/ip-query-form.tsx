@@ -19,12 +19,12 @@ export default function IPQueryForm() {
 
   // 动态占位符文本
   const placeholders = [
-    "输入IP地址查询地理位置...",
-    "例如: 8.8.8.8 (IPv4)",
-    "例如: 2001:4860:4860::8888 (IPv6)",
-    "留空查询您当前的IP地址",
-    "支持IPv4和IPv6地址格式",
-    "输入任意有效的IP地址",
+    "Enter an IP address to find its location...",
+    "Example: 8.8.8.8 (IPv4)",
+    "Example: 2001:4860:4860::8888 (IPv6)",
+    "Leave blank to look up your public IP",
+    "IPv4 and IPv6 addresses supported",
+    "Enter any valid public IP address",
   ];
 
   const handleInputChange = (value: string) => {
@@ -47,14 +47,14 @@ export default function IPQueryForm() {
 
     // 验证IP格式
     if (!isValidIP(trimmedValue)) {
-      toast.error("IP地址格式错误", {
-        description: "请输入有效的IPv4或IPv6地址格式",
+      toast.error("Invalid IP address", {
+        description: "Enter a valid IPv4 or IPv6 address",
         duration: 3000,
       });
       return;
     }
 
-    // 检查是否为私有或不可达IP地址
+    // 检查是否为Private或不可达IP address
     const privateCheck = checkPrivateIP(trimmedValue);
     if (privateCheck.isPrivate) {
       toast.warning(privateCheck.message, {
@@ -74,7 +74,7 @@ export default function IPQueryForm() {
     handleInputChange(e.target.value);
   };
 
-  // 处理"查询我的IP"按钮点击事件
+  // 处理"Look up my IP"按钮点击事件
   const handleQueryMyIP = async () => {
     // 清空输入框并清除错误状态
     setInputValue("");
@@ -158,7 +158,7 @@ export default function IPQueryForm() {
         transition={{ delay: 0.2 }}
         className="mt-4 md:mt-6 flex flex-wrap gap-2 md:gap-3 justify-center px-2"
       >
-        {/* 查询我的IP按钮 */}
+        {/* Look up my IP按钮 */}
         <div
           className="relative"
           onMouseEnter={() => setHoveredButton(0)}
@@ -189,12 +189,12 @@ export default function IPQueryForm() {
           >
             <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span className="text-[rgb(var(--color-text-secondary))] font-medium">
-              查询我的IP
+              Look up my IP
             </span>
           </motion.button>
         </div>
 
-        {/* 示例IPv4按钮 */}
+        {/* IPv4 example按钮 */}
         <div
           className="relative"
           onMouseEnter={() => setHoveredButton(1)}
@@ -235,12 +235,12 @@ export default function IPQueryForm() {
               />
             </div>
             <span className="text-[rgb(var(--color-text-secondary))] font-medium">
-              示例IPv4
+              IPv4 example
             </span>
           </motion.button>
         </div>
 
-        {/* 示例IPv6按钮 */}
+        {/* IPv6 example按钮 */}
         <div
           className="relative"
           onMouseEnter={() => setHoveredButton(2)}
@@ -281,7 +281,7 @@ export default function IPQueryForm() {
               />
             </div>
             <span className="text-[rgb(var(--color-text-secondary))] font-medium">
-              示例IPv6
+              IPv6 example
             </span>
           </motion.button>
         </div>

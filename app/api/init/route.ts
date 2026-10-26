@@ -22,7 +22,7 @@ export async function GET() {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "未知错误",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
@@ -36,7 +36,7 @@ export async function POST() {
     if (startupCheckService.isInitialized()) {
       return NextResponse.json({
         success: true,
-        message: "数据库已初始化",
+        message: "Database is already initialized",
         data: {
           isReady: true,
           databases: startupCheckService.getDatabaseStatus(),
@@ -51,7 +51,7 @@ export async function POST() {
 
     return NextResponse.json({
       success: true,
-      message: "数据库初始化完成",
+      message: "Database initialization complete",
       data: {
         isReady: status.isReady,
         databases: status.databases,
@@ -64,7 +64,7 @@ export async function POST() {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "未知错误",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );

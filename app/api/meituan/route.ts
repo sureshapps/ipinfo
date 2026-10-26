@@ -9,18 +9,18 @@ export async function POST(request: NextRequest) {
     const { ip } = body;
 
     if (!ip) {
-      return NextResponse.json({ error: "请提供IP地址" }, { status: 400 });
+      return NextResponse.json({ error: "Please provide an IP address" }, { status: 400 });
     }
 
     // 验证IP格式
     if (!isValidIP(ip)) {
-      return NextResponse.json({ error: "无效的IP地址格式" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid IP address format" }, { status: 400 });
     }
 
     // 检查是否适合使用美团API
     if (!MeituanAPIService.isSuitableForMeituan(ip)) {
       return NextResponse.json(
-        { error: "该IP不适合使用美团API查询" },
+        { error: "This IP is not supported by the Meituan service" },
         { status: 400 }
       );
     }
@@ -34,18 +34,18 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("美团API查询错误:", error);
+    console.error("美团APILookup error:", error);
 
     // 根据错误类型返回不同的状态码
-    if (error instanceof Error && error.message.includes("美团API请求失败")) {
+    if (error instanceof Error && error.message.includes("美团APIRequest failed")) {
       return NextResponse.json(
-        { error: "美团服务暂时不可用，请稍后重试" },
+        { error: "Meituan is temporarily unavailable. Please try again later." },
         { status: 503 }
       );
     }
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "溯源查询失败" },
+      { error: error instanceof Error ? error.message : "TraceLookup failed" },
       { status: 500 }
     );
   }
