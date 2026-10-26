@@ -38,7 +38,7 @@
   --color-border-light: 241 245 249; /* slate-100 */
   --color-text-primary: 15 23 42; /* slate-900 */
   --color-text-secondary: 71 85 105; /* slate-600 */
-  --color-text-muted: 148 163 184; /* slate-400 */
+  --color-text-muted: 100 116 139; /* slate-500, readable on glass */
   --color-text-inverse: 255 255 255; /* white */
 
   /* 卡片和表面 */
@@ -55,9 +55,9 @@
   /* 渐变背景 */
   --gradient-background: linear-gradient(
     135deg,
-    rgb(239 246 255),
-    rgb(255 255 255),
-    rgb(250 245 255)
+    rgb(214 236 255),
+    rgb(240 232 255) 48%,
+    rgb(212 248 238)
   );
   --gradient-card: linear-gradient(
     135deg,
@@ -117,9 +117,9 @@
   /* 渐变背景 */
   --gradient-background: linear-gradient(
     135deg,
-    rgb(2 6 23),
-    rgb(15 23 42),
-    rgb(30 41 59)
+    rgb(3 7 24),
+    rgb(10 18 48) 50%,
+    rgb(14 16 40)
   );
   --gradient-card: linear-gradient(
     135deg,
@@ -486,4 +486,204 @@ html.dark {
 
 .leaflet-marker-icon:hover {
   transform: scale(1.1);
+}
+
+
+/* =====================================================================
+   LIQUID GLASS · CRYSTAL CLEAR THEME
+   Existing components keep their class names; the attribute selectors
+   below re-skin every glass card, tile and hairline that already uses
+   the semantic color tokens.
+   ===================================================================== */
+:root {
+  --glass-tint: transparent;
+  --glass-fill: linear-gradient(135deg, rgba(255,255,255,.58) 0%, rgba(255,255,255,.22) 40%, rgba(255,255,255,.12) 62%, rgba(255,255,255,.40) 100%);
+  --glass-fill-strong: linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.70) 55%, rgba(255,255,255,.82));
+  --glass-tile: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.26));
+  --glass-blur: blur(26px) saturate(190%) brightness(1.04);
+  --glass-line: rgba(255,255,255,.75);
+  --glass-line-soft: rgba(110,140,190,.20);
+  --glass-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,.95),
+    inset 0 -1px 0 rgba(255,255,255,.35),
+    inset 1px 0 0 rgba(255,255,255,.5),
+    inset -1px 0 0 rgba(255,255,255,.25),
+    0 0 0 1px rgba(90,120,180,.13),
+    0 28px 56px -20px rgba(30,64,140,.30),
+    0 6px 16px -6px rgba(30,64,140,.14);
+  --tile-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.4), 0 1px 2px rgba(30,64,140,.06);
+  --glass-hover: rgba(255,255,255,.50);
+  --orb-opacity: .75;
+}
+.dark {
+  --glass-fill: linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.05) 40%, rgba(255,255,255,.03) 62%, rgba(255,255,255,.10) 100%);
+  --glass-fill-strong: linear-gradient(135deg, rgba(20,30,64,.88), rgba(10,16,40,.82));
+  --glass-tile: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  --glass-blur: blur(28px) saturate(170%) brightness(1.08);
+  --glass-line: rgba(255,255,255,.24);
+  --glass-line-soft: rgba(255,255,255,.12);
+  --glass-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,.32),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    inset 1px 0 0 rgba(255,255,255,.12),
+    0 0 0 1px rgba(255,255,255,.07),
+    0 30px 60px -20px rgba(0,0,0,.75),
+    0 6px 18px -6px rgba(0,0,0,.45);
+  --tile-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.07);
+  --glass-hover: rgba(255,255,255,.12);
+  --orb-opacity: .55;
+}
+
+html { background: rgb(var(--color-background)); }
+.bg-gradient-main { background: var(--gradient-background); }
+
+/* ---- Aurora behind the glass ---- */
+.aurora-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: var(--orb-opacity);
+  will-change: transform;
+  animation: aurora-drift 32s ease-in-out infinite alternate;
+}
+.orb-sky    { top: -12%; left: -8%;  width: 42rem; height: 42rem; background: radial-gradient(circle at 35% 35%, #38bdf8, transparent 65%); }
+.orb-violet { top: 8%;  right: -12%; width: 38rem; height: 38rem; background: radial-gradient(circle at 40% 40%, #a78bfa, transparent 65%); animation-duration: 38s; animation-delay: -9s; }
+.orb-mint   { bottom: -14%; left: 12%; width: 36rem; height: 36rem; background: radial-gradient(circle at 50% 50%, #34d399, transparent 65%); animation-duration: 44s; animation-delay: -18s; }
+.orb-rose   { bottom: 4%; right: 6%; width: 26rem; height: 26rem; background: radial-gradient(circle at 50% 50%, #f9a8d4, transparent 65%); animation-duration: 36s; animation-delay: -4s; }
+.dark .orb-sky    { background: radial-gradient(circle at 35% 35%, #2563eb, transparent 65%); }
+.dark .orb-violet { background: radial-gradient(circle at 40% 40%, #7c3aed, transparent 65%); }
+.dark .orb-mint   { background: radial-gradient(circle at 50% 50%, #0d9488, transparent 65%); }
+.dark .orb-rose   { background: radial-gradient(circle at 50% 50%, #be185d, transparent 65%); }
+@keyframes aurora-drift {
+  from { transform: translate3d(0,0,0) scale(1); }
+  to   { transform: translate3d(5%, 7%, 0) scale(1.12); }
+}
+
+/* ---- Hairlines: soft, translucent ---- */
+[class*="border-[rgb(var(--color-border))]"] { border-color: var(--glass-line-soft); }
+
+/* ---- Glass panels ---- */
+.liquid-glass,
+.liquid-glass-strong,
+[class*="color-glass-background"] {
+  background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-fill);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--glass-shadow);
+}
+.liquid-glass-strong {
+  background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-fill-strong);
+}
+.tint-sky    { --glass-tint: rgba(56,160,255,.16); }
+.tint-violet { --glass-tint: rgba(150,110,255,.16); }
+
+/* ---- Inner tiles (no blur: parent already blurs the backdrop) ---- */
+[class~="bg-[rgb(var(--color-surface))]"],
+[class~="bg-[rgb(var(--color-surface))]/80"],
+[class~="bg-[rgb(var(--color-surface))]/90"],
+[class~="bg-[rgb(var(--color-surface))]/95"],
+[class~="bg-[rgb(var(--color-surface-hover))]"],
+.liquid-tile {
+  background: var(--glass-tile);
+  box-shadow: var(--tile-shadow);
+}
+[class*="bg-[rgb(var(--color-surface))]"]:hover,
+[class*="hover:bg-[rgb(var(--color-surface-hover))]"]:hover {
+  background: var(--glass-hover);
+}
+/* floating overlays on the map / chart get real blur */
+[class~="bg-[rgb(var(--color-surface))]/90"],
+[class~="bg-[rgb(var(--color-surface))]/95"],
+[class~="bg-[rgb(var(--color-surface))]/80"] {
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+}
+
+/* ---- Search field (PlaceholdersAndVanishInput) ---- */
+.liquid-input form {
+  background: var(--glass-fill) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--glass-shadow) !important;
+  border-radius: 9999px;
+}
+.liquid-input form button[type="submit"] {
+  background: linear-gradient(135deg, #38bdf8, #6366f1) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 6px 14px -4px rgba(79,70,229,.55);
+}
+.liquid-input form button[type="submit"]:disabled { filter: saturate(.4) opacity(.7); }
+
+/* ---- Dialog & toasts ---- */
+[data-slot="dialog-overlay"] {
+  background: rgba(12,24,60,.28) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+}
+[data-slot="dialog-content"] {
+  background: var(--glass-fill-strong) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line) !important;
+  box-shadow: var(--glass-shadow) !important;
+  border-radius: 1.75rem !important;
+}
+[data-sonner-toast] {
+  background: var(--glass-fill-strong) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: rgb(var(--color-text-primary)) !important;
+  border-radius: 1rem !important;
+}
+
+/* ---- BGP chart tooltip ---- */
+.bgp-tooltip {
+  background: var(--glass-fill-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  color: rgb(var(--color-text-primary));
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+}
+
+/* ---- Leaflet ---- */
+.leaflet-popup-content-wrapper,
+.custom-popup .leaflet-popup-content-wrapper {
+  background: var(--glass-fill-strong) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line) !important;
+  box-shadow: var(--glass-shadow) !important;
+  border-radius: 16px !important;
+}
+.dark .custom-popup .leaflet-popup-content-wrapper { background: var(--glass-fill-strong) !important; }
+.leaflet-popup-tip { background: var(--glass-fill-strong) !important; box-shadow: none !important; }
+.leaflet-control-zoom a {
+  background: var(--glass-tile) !important;
+  border-color: var(--glass-line-soft) !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.leaflet-tile-pane { filter: saturate(1.15) contrast(1.02); }
+.leaflet-container .leaflet-control-attribution {
+  background: var(--glass-tile) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 8px 0 0 0;
+}
+
+/* ---- Keyboard focus ---- */
+:focus-visible {
+  outline: 2px solid rgba(56,189,248,.9);
+  outline-offset: 2px;
+}
+
+/* ---- Fallback when backdrop-filter is unsupported ---- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .liquid-glass, .liquid-glass-strong, [class*="color-glass-background"] { background: var(--glass-fill-strong); }
 }
