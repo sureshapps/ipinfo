@@ -116,7 +116,7 @@ export default function IPQueryForm() {
       className="w-full max-w-3xl mx-auto px-2 md:px-0"
     >
       {/* 新的输入框 - 使用Placeholders And Vanish Input */}
-      <div className="relative">
+      <div className="relative liquid-input">
         <PlaceholdersAndVanishInput
           placeholders={placeholders}
           onChange={handleInputChangeForVanishInput}
@@ -167,7 +167,7 @@ export default function IPQueryForm() {
           <AnimatePresence>
             {hoveredButton === 0 && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-800/40 dark:to-purple-800/40 block rounded-full"
+                className="absolute inset-0 h-full w-full bg-white/40 dark:bg-white/10 block rounded-full"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -185,7 +185,7 @@ export default function IPQueryForm() {
             onClick={handleQueryMyIP}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full transition-all duration-200 border border-[rgb(var(--color-border))] min-h-[44px] md:min-h-auto"
+            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm liquid-glass rounded-full transition-all duration-200 min-h-[44px] md:min-h-auto"
           >
             <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span className="text-[rgb(var(--color-text-secondary))] font-medium">
@@ -203,7 +203,7 @@ export default function IPQueryForm() {
           <AnimatePresence>
             {hoveredButton === 1 && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-blue-100/80 dark:bg-blue-800/40 block rounded-full"
+                className="absolute inset-0 h-full w-full bg-sky-300/30 dark:bg-sky-300/15 block rounded-full"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -221,7 +221,7 @@ export default function IPQueryForm() {
             onClick={() => handleInputChange("8.8.8.8")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all duration-200 border border-blue-200 dark:border-blue-700 min-h-[44px] md:min-h-auto"
+            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm liquid-glass tint-sky rounded-full transition-all duration-200 min-h-[44px] md:min-h-auto"
           >
             <div className="flex items-center space-x-1.5">
               <Wifi className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -249,7 +249,7 @@ export default function IPQueryForm() {
           <AnimatePresence>
             {hoveredButton === 2 && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-purple-100/80 dark:bg-purple-800/40 block rounded-full"
+                className="absolute inset-0 h-full w-full bg-violet-300/30 dark:bg-violet-300/15 block rounded-full"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -267,7 +267,7 @@ export default function IPQueryForm() {
             onClick={() => handleInputChange("2001:4860:4860::8888")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm bg-purple-50 dark:bg-purple-900/20 rounded-full transition-all duration-200 border border-purple-200 dark:border-purple-700 min-h-[44px] md:min-h-auto"
+            className="relative z-10 flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm liquid-glass tint-violet rounded-full transition-all duration-200 min-h-[44px] md:min-h-auto"
           >
             <div className="flex items-center space-x-1.5">
               <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />

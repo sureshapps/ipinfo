@@ -81,7 +81,7 @@ export default function BGPPeersDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="!max-w-[95vw] w-full max-h-[90vh] overflow-hidden bg-white/98 backdrop-blur-sm sm:!max-w-[95vw]">
+      <DialogContent className="!max-w-[95vw] w-full max-h-[90vh] overflow-hidden liquid-glass-strong sm:!max-w-[95vw]">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Network className="w-5 h-5 text-blue-500" />

@@ -88,15 +88,7 @@ export default function ThemeToggle() {
       onClick={toggleThemeWithAnimation}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="
-        relative p-2 rounded-lg
-        bg-[rgb(var(--color-surface))]/80 backdrop-blur-sm
-        hover:bg-[rgb(var(--color-surface-hover))]
-        border border-[rgb(var(--color-border))]/50
-        shadow-sm hover:shadow-md hover:border-[rgb(var(--color-border))]
-        transition-all duration-200
-        group overflow-hidden
-      "
+      className="relative h-11 w-11 rounded-full liquid-glass group overflow-hidden transition-transform duration-200"
       title={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
       <AnimatePresence mode="wait" initial={false}>

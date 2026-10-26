@@ -152,35 +152,35 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
           text: 'Direct',
           icon: CheckCircle,
           color: 'text-green-600 dark:text-green-400',
-          bgColor: 'bg-green-50 dark:bg-green-900/30'
+          bgColor: 'bg-green-400/15 dark:bg-green-300/10 ring-1 ring-inset ring-green-400/25'
         };
       case 'domestic':
         return {
           text: 'Domestic proxy',
           icon: Shield,
           color: 'text-blue-600 dark:text-blue-400',
-          bgColor: 'bg-blue-50 dark:bg-blue-900/30'
+          bgColor: 'bg-blue-400/15 dark:bg-blue-300/10 ring-1 ring-inset ring-blue-400/25'
         };
       case 'foreign':
         return {
           text: 'Foreign proxy',
           icon: Globe,
           color: 'text-purple-600 dark:text-purple-400',
-          bgColor: 'bg-purple-50 dark:bg-purple-900/30'
+          bgColor: 'bg-purple-400/15 dark:bg-purple-300/10 ring-1 ring-inset ring-purple-400/25'
         };
       case 'mixed':
         return {
           text: 'Mixed proxy',
           icon: Shuffle,
           color: 'text-orange-600 dark:text-orange-400',
-          bgColor: 'bg-orange-50 dark:bg-orange-900/30'
+          bgColor: 'bg-orange-400/15 dark:bg-orange-300/10 ring-1 ring-inset ring-orange-400/25'
         };
       default:
         return {
           text: 'Unknown',
           icon: HelpCircle,
           color: 'text-gray-600 dark:text-gray-400',
-          bgColor: 'bg-gray-50 dark:bg-gray-900/30'
+          bgColor: 'bg-gray-400/15 dark:bg-gray-300/10 ring-1 ring-inset ring-gray-400/25'
         };
     }
   };
@@ -333,8 +333,8 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
 
   const getVersionBg = (version: string) => {
     return version === "IPv4"
-      ? "bg-blue-50 dark:bg-blue-950/50"
-      : "bg-purple-50 dark:bg-purple-950/50";
+      ? "bg-sky-400/10 dark:bg-sky-300/10"
+      : "bg-violet-400/10 dark:bg-violet-300/10";
   };
 
   // 获取Data source颜色
@@ -344,10 +344,10 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
   };
 
   const getSourceBg = (source: string) => {
-    if (source === "MeiTuan") return "bg-yellow-100 dark:bg-yellow-900/30";
+    if (source === "MeiTuan") return "bg-yellow-400/15 dark:bg-yellow-300/10 ring-1 ring-inset ring-yellow-400/25";
     return source === "MaxMind"
-      ? "bg-blue-100 dark:bg-blue-900/30"
-      : "bg-green-100 dark:bg-green-900/30";
+      ? "bg-blue-400/15 dark:bg-blue-300/10 ring-1 ring-inset ring-blue-400/25"
+      : "bg-green-400/15 dark:bg-green-300/10 ring-1 ring-inset ring-green-400/25";
   };
 
   const containerVariants = {
@@ -377,7 +377,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
       {/* 主IP展示卡片 */}
       <motion.div
         variants={itemVariants}
-        className="bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-3xl shadow-xl border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300"
+        className="bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-[2rem] overflow-hidden"
       >
         {/* 头部 - IP address */}
         <div
@@ -453,7 +453,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                   <button
                     onClick={handleTrace}
                     disabled={isTracing}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-yellow-50 dark:bg-yellow-900/30 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-yellow-400/15 dark:bg-yellow-300/10 ring-1 ring-inset ring-yellow-400/25 hover:bg-yellow-400/25 dark:hover:bg-yellow-300/20 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isTracing ? (
                       <Loader2 className="w-4 h-4 text-yellow-600 animate-spin" />
@@ -471,7 +471,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                 <button
                   onClick={handleProxyDetection}
                   disabled={isProxyDetecting}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-cyan-50 dark:bg-cyan-900/30 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-cyan-400/15 dark:bg-cyan-300/10 ring-1 ring-inset ring-cyan-400/25 hover:bg-cyan-400/25 dark:hover:bg-cyan-300/20 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Check your current connection"
                 >
                   {isProxyDetecting ? (
@@ -489,7 +489,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
               {tracedData && (
                 <button
                   onClick={resetToOriginal}
-                  className="px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-900/30 hover:bg-gray-100 dark:hover:bg-gray-900/50 transition-colors duration-200 text-sm font-medium text-gray-600 dark:text-gray-400"
+                  className="px-3 py-2 rounded-xl bg-gray-400/15 dark:bg-gray-300/10 ring-1 ring-inset ring-gray-400/25 hover:bg-gray-400/25 dark:hover:bg-gray-300/20 transition-colors duration-200 text-sm font-medium text-gray-600 dark:text-gray-400"
                 >
                   Reset
                 </button>
@@ -593,7 +593,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                           currentData.as?.name
                         )
                       }
-                      className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] hover:bg-blue-50 dark:hover:bg-blue-900/30 px-2 py-1 rounded text-[rgb(var(--color-text-primary))] hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-700"
+                      className="font-mono text-sm bg-[rgb(var(--color-surface-hover))] hover:bg-blue-400/25 dark:hover:bg-blue-300/20 px-2 py-1 rounded text-[rgb(var(--color-text-primary))] hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-700"
                       title="View BGP peers"
                     >
                       AS{currentData.as.number}
@@ -689,10 +689,10 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
                     px-3 py-1 rounded-full text-xs font-medium flex items-center space-x-1 transition-colors duration-300
                     ${
                       currentData.accuracy === "high"
-                        ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                        ? "bg-green-400/15 dark:bg-green-300/10 ring-1 ring-inset ring-green-400/25 text-green-700 dark:text-green-400"
                         : currentData.accuracy === "medium"
-                        ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
-                        : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                        ? "bg-yellow-400/15 dark:bg-yellow-300/10 ring-1 ring-inset ring-yellow-400/25 text-yellow-700 dark:text-yellow-400"
+                        : "bg-red-400/15 dark:bg-red-300/10 ring-1 ring-inset ring-red-400/25 text-red-700 dark:text-red-400"
                     }
                   `}
                   >

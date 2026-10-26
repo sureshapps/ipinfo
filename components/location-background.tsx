@@ -39,7 +39,7 @@ export default function LocationBackground() {
     <div aria-hidden="true" className={`pointer-events-none fixed inset-0 z-0 transition-opacity duration-700 motion-reduce:transition-none ${loaded ? "opacity-100" : "opacity-0"}`}>
       <Image key={photo.image} src={photo.image} alt="" fill unoptimized sizes="100vw"
         className="object-cover object-center" onLoad={() => setLoaded(true)} onError={() => setPhoto(null)} />
-      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/60 to-white/90 dark:from-slate-950/55 dark:via-slate-950/50 dark:to-slate-950/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/25 via-white/15 to-white/55 dark:from-slate-950/35 dark:via-slate-950/25 dark:to-slate-950/70" />
     </div>
     {loaded && <div className="absolute bottom-4 left-0 right-0 z-20 mx-auto max-w-3xl px-4 text-center text-xs text-[rgb(var(--color-text-secondary))]">
       <span className="rounded-lg bg-[rgb(var(--color-surface))]/90 px-3 py-2 leading-6 box-decoration-clone">

@@ -271,7 +271,7 @@ export default function IPLocationMap({
             <span className="text-[rgb(var(--color-text-muted))]">
               Data source: {ipData.source}
             </span>
-            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 transition-colors duration-300">
+            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-400/15 dark:bg-blue-300/10 ring-1 ring-inset ring-blue-400/25 text-blue-700 dark:text-blue-400 transition-colors duration-300">
               {isPrivateIP ? "Local network" : "Unknown location"}
             </span>
           </div>
@@ -360,7 +360,7 @@ export default function IPLocationMap({
         {/* 缩放控制按钮 */}
         <div className="absolute top-4 right-4 z-10">
           <button
-            className="p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-colors duration-200"
+            className="p-2 liquid-glass rounded-full transition-transform duration-200 hover:scale-105"
             onClick={() => {
               // 触发地图重新定位到标记点并放大
               const mapElement = document.querySelector(
@@ -391,10 +391,10 @@ export default function IPLocationMap({
             px-2 py-1 rounded-full text-xs font-medium transition-colors duration-300
             ${
               ipData.accuracy === "high"
-                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                ? "bg-green-400/15 dark:bg-green-300/10 ring-1 ring-inset ring-green-400/25 text-green-700 dark:text-green-400"
                 : ipData.accuracy === "medium"
-                ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
-                : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                ? "bg-yellow-400/15 dark:bg-yellow-300/10 ring-1 ring-inset ring-yellow-400/25 text-yellow-700 dark:text-yellow-400"
+                : "bg-red-400/15 dark:bg-red-300/10 ring-1 ring-inset ring-red-400/25 text-red-700 dark:text-red-400"
             }
           `}
           >

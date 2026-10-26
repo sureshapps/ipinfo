@@ -228,11 +228,12 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
         .attr("width", area.width)
         .attr("height", height - 100)
         .attr("fill", area.color)
-        .attr("fill-opacity", 0.1)
+        .attr("fill-opacity", 0.08)
         .attr("stroke", area.color)
-        .attr("stroke-width", 2)
+        .attr("stroke-opacity", 0.55)
+        .attr("stroke-width", 1.5)
         .attr("stroke-dasharray", "5,5")
-        .attr("rx", 8);
+        .attr("rx", 16);
 
       g.append("text")
         .attr("x", area.x + area.width / 2)
@@ -246,6 +247,10 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
 
     // 添加箭头标记 - IPv4
     const defs = g.append("defs");
+    const sheen = defs.append("linearGradient").attr("id", "node-sheen").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 1);
+    sheen.append("stop").attr("offset", "0%").attr("stop-color", "#fff").attr("stop-opacity", 0.55);
+    sheen.append("stop").attr("offset", "55%").attr("stop-color", "#fff").attr("stop-opacity", 0.05);
+    sheen.append("stop").attr("offset", "100%").attr("stop-color", "#fff").attr("stop-opacity", 0.18);
     defs.append("marker")
       .attr("id", "arrowhead-ipv4")
       .attr("viewBox", "0 -5 10 10")
@@ -304,8 +309,18 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .attr("height", d => d.isCenter ? 50 : 40)
       .attr("rx", 6)
       .attr("fill", d => d.color)
-      .attr("stroke", "rgb(var(--color-surface))")
-      .attr("stroke-width", 3);
+      .attr("fill-opacity", 0.82)
+      .attr("stroke", "rgba(255,255,255,0.75)")
+      .attr("stroke-width", 1.5)
+      .style("filter", "drop-shadow(0 6px 10px rgba(30,64,140,0.28))");
+
+    // glass sheen overlay
+    nodeGroups.append("rect")
+      .attr("width", d => d.isCenter ? 120 : 100)
+      .attr("height", d => d.isCenter ? 50 : 40)
+      .attr("rx", 6)
+      .attr("fill", "url(#node-sheen)")
+      .attr("pointer-events", "none");
 
     // ASN文本
     nodeGroups.append("text")
@@ -345,12 +360,6 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
       .attr('class', 'bgp-tooltip')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background', 'rgb(var(--color-surface))')
-      .style('color', 'rgb(var(--color-text-primary))')
-      .style('border', '1px solid rgb(var(--color-border))')
-      .style('box-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)')
-      .style('padding', '8px')
-      .style('border-radius', '4px')
       .style('font-size', '12px')
       .style('pointer-events', 'none')
       .style('z-index', '1000');
@@ -481,14 +490,14 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
   return (
     <div className={`w-full ${className}`}>
       {/* SVG容器 */}
-      <div className="relative w-full overflow-hidden border border-[rgb(var(--color-border))] rounded-lg bg-[rgb(var(--color-surface))] transition-colors duration-300">
+      <div className="relative w-full overflow-hidden border border-[rgb(var(--color-border))] rounded-2xl liquid-tile transition-colors duration-300">
         <svg
           ref={svgRef}
           width="100%"
           height={height}
           viewBox={`0 0 ${width} ${height}`}
           className="w-full"
-          style={{ background: 'rgb(var(--color-surface))' }}
+          style={{ background: 'transparent' }}
         />
 
         {/* 控制按钮 */}
@@ -568,14 +577,14 @@ const TIER2_ASNS = useMemo(() => [2497, 6939, 9370, 17676, 25820, 59105, 137409,
 
       {/* Selected node信息面板 */}
       {selectedNode && (
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mt-4 p-4 liquid-glass tint-sky rounded-2xl text-[rgb(var(--color-text-primary))]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-blue-900">
+            <h3 className="font-semibold">
               Selected node: AS{selectedNode.asn} {selectedNode.flag}
             </h3>
             <button
               onClick={() => setSelectedNode(null)}
-              className="h-6 w-6 text-blue-600 hover:text-blue-800 transition-colors duration-200"
+              className="h-6 w-6 text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] transition-colors duration-200"
             >
               ✕
             </button>
