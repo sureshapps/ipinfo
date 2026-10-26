@@ -24,12 +24,14 @@ export default function Home() {
 
   return (
     <div className="relative isolate min-h-screen bg-gradient-main transition-colors duration-300">
-      <LocationBackground />
-      {/* 背景装饰 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -right-32 w-64 h-64 bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-3xl transition-colors duration-500"></div>
-        <div className="absolute bottom-1/4 -left-32 w-64 h-64 bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-3xl transition-colors duration-500"></div>
+      {/* Aurora light field that the glass refracts */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="aurora-orb orb-sky" />
+        <div className="aurora-orb orb-violet" />
+        <div className="aurora-orb orb-mint" />
+        <div className="aurora-orb orb-rose" />
       </div>
+      <LocationBackground />
 
       {/* 主要内容 */}
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -71,7 +73,7 @@ export default function Home() {
                 className="flex flex-col items-center justify-center py-12"
               >
                 <motion.div
-                  className="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-4 transition-colors duration-300"
+                  className="w-16 h-16 liquid-glass tint-sky rounded-3xl flex items-center justify-center mb-4"
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                 >
@@ -116,7 +118,7 @@ export default function Home() {
                     stiffness: 200,
                     damping: 20,
                   }}
-                  className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 rounded-2xl flex items-center justify-center mb-6 transition-colors duration-300"
+                  className="w-20 h-20 liquid-glass tint-violet rounded-3xl flex items-center justify-center mb-6"
                 >
                   <Search className="w-10 h-10 text-[rgb(var(--color-text-muted))]" />
                 </motion.div>
