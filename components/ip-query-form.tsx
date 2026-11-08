@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { Globe, Wifi, Sparkles, Target } from "lucide-react";
+import { Globe, Wifi, Sparkles, Target, Search } from "lucide-react";
 import { useIPQueryStore } from "@/lib/store";
 import { isValidIP, checkPrivateIP } from "@/lib/ip-detection";
 import { motion, AnimatePresence } from "framer-motion";
@@ -113,10 +113,11 @@ export default function IPQueryForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="w-full max-w-3xl mx-auto px-2 md:px-0"
+      className="ip-search w-full max-w-3xl mx-auto px-2 md:px-0"
     >
       {/* 新的输入框 - 使用Placeholders And Vanish Input */}
       <div className="relative liquid-input">
+        <Search aria-hidden="true" className="search-icon" />
         <PlaceholdersAndVanishInput
           placeholders={placeholders}
           onChange={handleInputChangeForVanishInput}

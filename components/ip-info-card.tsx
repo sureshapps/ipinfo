@@ -372,16 +372,16 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full max-w-4xl mx-auto"
+      className="ip-dashboard w-full max-w-4xl mx-auto"
     >
       {/* 主IP展示卡片 */}
       <motion.div
         variants={itemVariants}
-        className="bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-[2rem] overflow-hidden"
+        className="ip-summary bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-[2rem] overflow-hidden"
       >
         {/* 头部 - IP address */}
         <div
-          className={`px-4 md:px-8 py-4 md:py-6 ${getVersionBg(
+          className={`ip-summary-header px-4 md:px-8 py-4 md:py-6 ${getVersionBg(
             currentData.ipVersion
           )} border-b border-[rgb(var(--color-border))] transition-colors duration-300`}
         >
@@ -497,6 +497,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
 
               {/* 复制按钮 */}
               <button
+                aria-label="Copy IP address"
                 onClick={() => copyToClipboard(currentData.ip, "IP address")}
                 className="p-2 rounded-xl hover:bg-[rgb(var(--color-surface-hover))] transition-colors duration-200"
               >
@@ -508,7 +509,7 @@ export default function IPInfoCard({ ipData }: IPInfoCardProps) {
 
         {/* 详细信息网格 */}
         <div className="p-4 md:p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <div className="detail-grid grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Location */}
             <motion.div
               variants={itemVariants}

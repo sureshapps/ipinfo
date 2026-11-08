@@ -205,7 +205,7 @@ export default function IPLocationMap({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-2xl shadow-lg border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300 ${className}`}
+        className={`location-map bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-2xl shadow-lg border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300 ${className}`}
       >
         {/* 简化头部信息 */}
         <div className="px-6 py-4 border-b border-[rgb(var(--color-border))] transition-colors duration-300">
@@ -286,7 +286,7 @@ export default function IPLocationMap({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-2xl shadow-lg border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300 ${className}`}
+      className={`location-map bg-[rgb(var(--color-glass-background))] backdrop-blur-sm rounded-2xl shadow-lg border border-[rgb(var(--color-border))] overflow-hidden transition-colors duration-300 ${className}`}
     >
       {/* 地图头部信息 */}
       <div className="px-4 md:px-6 py-3 md:py-4 border-b border-[rgb(var(--color-border))] transition-colors duration-300">

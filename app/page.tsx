@@ -23,7 +23,7 @@ export default function Home() {
   }, [executeQuery]);
 
   return (
-    <div className="relative isolate min-h-screen bg-gradient-main transition-colors duration-300">
+    <div className="dashboard relative isolate min-h-screen bg-gradient-main transition-colors duration-300">
       {/* Aurora light field that the glass refracts */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="aurora-orb orb-sky" />
@@ -50,7 +50,7 @@ export default function Home() {
         </motion.header>
 
         {/* 主内容区域 - 垂直居中 */}
-        <div className="flex-1 flex flex-col justify-center py-8">
+        <div className="dashboard-content flex-1 flex flex-col py-8">
           {/* 查询表单 */}
           <motion.section
             initial={{ opacity: 0, y: -10 }}
